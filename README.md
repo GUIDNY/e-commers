@@ -4,12 +4,34 @@
 
 ## הפעלה מקומית
 
+**חשוב:** ההרצה חייבת להתבצע על המחשב שלכם (או שרת משלכם) - לא בתוך צ'אט/סביבת ענן של Claude, כי `localhost` תמיד מצביע על המכונה שמריצה את הפקודה, לא על מכונה אחרת.
+
+1. שכפלו את הריפו ועברו לענף הרצוי (למשל):
+
+   ```bash
+   git clone https://github.com/guidny/e-commers.git
+   cd e-commers
+   git checkout claude/website-localhost-setup-j6gcr7
+   ```
+
+2. התקינו תלויות והריצו את שרת הפיתוח:
+
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+3. פתחו בדפדפן [http://localhost:3000](http://localhost:3000).
+
+### פורט 3000 כבר תפוס?
+
+אם יש לכם כבר פרויקט אחר שרץ על פורט 3000 (תראו את **האתר של הפרויקט האחר** בדפדפן, לא את קמפאיזי), הריצו על פורט אחר:
+
 ```bash
-npm install
-npm run dev
+npm run dev -- -p 3001
 ```
 
-פתחו [http://localhost:3000](http://localhost:3000).
+ואז פתחו [http://localhost:3001](http://localhost:3001).
 
 ## מבנה הפרויקט
 
