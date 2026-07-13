@@ -23,6 +23,7 @@ export const products: Product[] = [
     etaDays: [14, 24],
     priceSource: "estimated",
     icon: "shower",
+    imageUrl: "https://images.unsplash.com/photo-1588127727253-e5f2faf4f541?w=800&q=80&auto=format&fit=crop",
     featured: true,
     specsHe: [
       "סוללת ליתיום 5000mAh, טעינה בכבל USB",
@@ -43,6 +44,7 @@ export const products: Product[] = [
     etaDays: [12, 20],
     priceSource: "estimated",
     icon: "lantern",
+    imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&q=80&auto=format&fit=crop",
     featured: true,
     specsHe: ["נטען USB-C", "3 מצבי תאורה", "מתקפל לגודל כף יד", "וו תלייה מובנה"],
   },
@@ -86,6 +88,7 @@ export const products: Product[] = [
     etaDays: [14, 24],
     priceSource: "estimated",
     icon: "power-bank",
+    imageUrl: "https://images.pexels.com/photos/518530/pexels-photo-518530.jpeg?auto=compress&cs=tinysrgb&w=800",
     featured: true,
     specsHe: ["קיבולת 20000mAh", "פאנל טעינה סולארי", "פנס LED מובנה", "2 יציאות USB יציאה"],
   },
@@ -101,6 +104,7 @@ export const products: Product[] = [
     etaDays: [14, 22],
     priceSource: "estimated",
     icon: "hammock",
+    imageUrl: "https://images.pexels.com/photos/33933884/pexels-photo-33933884.jpeg?auto=compress&cs=tinysrgb&w=800",
     specsHe: ["עומס מקסימלי: עד 200 ק\"ג", "כולל רצועות וקרביטנים", "מתקפל לגודל כף יד"],
   },
   {
@@ -115,6 +119,7 @@ export const products: Product[] = [
     etaDays: [12, 20],
     priceSource: "estimated",
     icon: "headlamp",
+    imageUrl: "https://images.unsplash.com/photo-1449710146567-1e282fa41f2f?w=800&q=80&auto=format&fit=crop",
     specsHe: ["נטען USB", "עמיד למים IPX5", "מספר מצבי תאורה", "משקל קל במיוחד"],
   },
   {
@@ -129,6 +134,7 @@ export const products: Product[] = [
     etaDays: [16, 26],
     priceSource: "estimated",
     icon: "chair",
+    imageUrl: "https://images.pexels.com/photos/11441859/pexels-photo-11441859.jpeg?auto=compress&cs=tinysrgb&w=800",
     specsHe: ["עומס מקסימלי: עד 120 ק\"ג", "מתקפל לתיק נשיאה", "מסגרת אלומיניום קלה"],
   },
   {
@@ -171,6 +177,7 @@ export const products: Product[] = [
     etaDays: [14, 22],
     priceSource: "estimated",
     icon: "bug-lantern",
+    imageUrl: "https://images.unsplash.com/photo-1523365154888-8a758819b722?w=800&q=80&auto=format&fit=crop",
     specsHe: ["קוטל יתושים אלקטרוני מובנה", "נטען USB", "וו תלייה לאוהל"],
   },
   {
@@ -185,6 +192,7 @@ export const products: Product[] = [
     etaDays: [16, 26],
     priceSource: "estimated",
     icon: "grill",
+    imageUrl: "https://images.pexels.com/photos/7893772/pexels-photo-7893772.jpeg?auto=compress&cs=tinysrgb&w=800",
     specsHe: ["גוף נירוסטה עמיד", "מתקפל תוך שניות", "כולל תיק נשיאה"],
   },
   {
@@ -199,6 +207,7 @@ export const products: Product[] = [
     etaDays: [14, 22],
     priceSource: "estimated",
     icon: "cookware",
+    imageUrl: "https://images.pexels.com/photos/31423668/pexels-photo-31423668.jpeg?auto=compress&cs=tinysrgb&w=800",
     specsHe: ["אלומיניום אנודייז קל משקל", "כולל סיר, מחבת וכלי אכילה", "מתקפל לגודל קומפקטי"],
   },
   {
@@ -213,6 +222,7 @@ export const products: Product[] = [
     etaDays: [12, 20],
     priceSource: "estimated",
     icon: "multi-tool",
+    imageUrl: "https://images.pexels.com/photos/2599276/pexels-photo-2599276.jpeg?auto=compress&cs=tinysrgb&w=800",
     specsHe: ["פלדת נירוסטה", "מספר כלים במכשיר אחד", "כולל נרתיק נשיאה"],
   },
 ];
