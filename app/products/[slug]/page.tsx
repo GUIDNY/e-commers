@@ -29,7 +29,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </nav>
 
       <div className="grid gap-10 md:grid-cols-2">
-        <div className="grid aspect-square place-items-center overflow-hidden rounded-3xl bg-camp-sand-100 text-camp-forest-700">
+        <div className="grid aspect-square place-items-center overflow-hidden rounded-3xl bg-camp-sand-100 text-camp-forest-700 shadow-[0_4px_20px_rgba(31,51,39,0.08)]">
           <ProductThumb imageUrl={product.imageUrl} icon={product.icon} alt={product.nameHe} iconClassName="h-40 w-40" />
         </div>
 
@@ -39,20 +39,25 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
           <ProductDetailActions product={product} />
 
-          <div className="mt-6 flex items-center gap-2 rounded-xl bg-camp-sand-100 p-3 text-sm text-camp-bark-800">
-            <TruckIcon className="h-5 w-5 shrink-0 text-camp-forest-700" />
-            <span>
-              משלוח לישראל: זמן אספקה משוער {product.etaDays[0]}-{product.etaDays[1]} ימי עסקים.
-            </span>
-          </div>
+          {product.shipsToIsrael !== false && (
+            <div className="mt-6 flex items-center gap-2 rounded-xl bg-camp-sand-100 p-3 text-sm text-camp-bark-800">
+              <TruckIcon className="h-5 w-5 shrink-0 text-camp-forest-700" />
+              <span>
+                משלוח לישראל: זמן אספקה משוער {product.etaDays[0]}-{product.etaDays[1]} ימי עסקים.
+              </span>
+            </div>
+          )}
 
           <p className="mt-6 leading-relaxed text-camp-bark-800">{product.descriptionHe}</p>
 
           <div className="mt-6">
-            <h2 className="mb-2 font-bold text-camp-forest-900">מפרט</h2>
-            <ul className="list-inside list-disc space-y-1 text-sm text-camp-bark-800">
+            <h2 className="mb-3 font-bold text-camp-forest-900">מפרט</h2>
+            <ul className="space-y-2 text-sm text-camp-bark-800">
               {product.specsHe.map((spec) => (
-                <li key={spec}>{spec}</li>
+                <li key={spec} className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-camp-amber-600" />
+                  <span>{spec}</span>
+                </li>
               ))}
             </ul>
           </div>

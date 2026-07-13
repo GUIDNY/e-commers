@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCart } from "@/components/CartContext";
 import { formatIls } from "@/lib/pricing";
 import { ProductThumb } from "@/components/ProductThumb";
+import { CartIcon } from "@/components/Icons";
 
 export default function CartPage() {
   const { items, setQty, removeItem, subtotalIls, shippingIls, totalIls } = useCart();
@@ -11,6 +12,9 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-20 text-center">
+        <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-camp-sand-100 text-camp-forest-700">
+          <CartIcon className="h-7 w-7" />
+        </div>
         <h1 className="text-2xl font-extrabold text-camp-forest-900">העגלה שלך ריקה</h1>
         <p className="mt-2 text-camp-bark-800/70">עדיין לא הוספתם מוצרים לעגלה.</p>
         <Link

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getCatalog } from "@/lib/catalog";
 import { ProductCard } from "@/components/ProductCard";
@@ -9,52 +10,57 @@ export default async function Home() {
 
   return (
     <div>
-      <section className="relative overflow-hidden bg-camp-forest-900 text-camp-sand-50">
-        <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-16 sm:py-24 md:grid-cols-2">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-camp-amber-500">
-              <TentIcon className="h-4 w-4" /> ציוד קמפינג נבחר, ישירות אליכם
-            </span>
-            <h1 className="mt-4 text-4xl font-extrabold leading-tight sm:text-5xl">
-              כל מה שצריך <span className="text-camp-amber-500">לטיול הבא</span> שלכם
-            </h1>
-            <p className="mt-4 max-w-md text-camp-sand-100/80">
-              מקלחות שדה, תאורת LED, כלי בישול וציוד שינה - קטלוג קמפינג אוצר ביד, במחירים הוגנים ומשלוח עד הבית
-              בישראל.
-            </p>
-            <div className="mt-8 flex gap-3">
-              <Link
-                href="/products"
-                className="rounded-full bg-camp-amber-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-camp-amber-500"
-              >
-                לכל המוצרים
-              </Link>
-              <Link
-                href="#featured"
-                className="rounded-full border border-white/30 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/10"
-              >
-                מוצרים נבחרים
-              </Link>
-            </div>
-          </div>
-          <div className="mx-auto grid h-56 w-56 place-items-center rounded-full bg-white/5 sm:h-72 sm:w-72">
-            <TentIcon className="h-32 w-32 text-camp-amber-500 sm:h-40 sm:w-40" />
+      <section className="relative isolate overflow-hidden text-camp-sand-50">
+        <Image src="/hero-camping.jpg" alt="" fill priority sizes="100vw" className="-z-10 object-cover" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-camp-forest-900 via-camp-forest-900/65 to-camp-forest-900/25" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-l from-camp-forest-900/20 via-transparent to-transparent" />
+
+        <div className="mx-auto max-w-6xl px-4 py-24 sm:py-36">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-camp-amber-500 backdrop-blur-sm">
+            <TentIcon className="h-4 w-4" /> ציוד קמפינג נבחר, ישירות אליכם
+          </span>
+          <h1 className="mt-4 max-w-xl text-4xl font-extrabold leading-tight drop-shadow-sm sm:text-6xl">
+            כל מה שצריך <span className="text-camp-amber-500">לטיול הבא</span> שלכם
+          </h1>
+          <p className="mt-4 max-w-md text-camp-sand-100/90">
+            מקלחות שדה, תאורת LED, כלי בישול וציוד שינה - קטלוג קמפינג אוצר ביד, במחירים הוגנים ומשלוח עד הבית
+            בישראל.
+          </p>
+          <div className="mt-8 flex gap-3">
+            <Link
+              href="/products"
+              className="rounded-full bg-camp-amber-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-black/20 transition hover:bg-camp-amber-500 active:scale-95"
+            >
+              לכל המוצרים
+            </Link>
+            <Link
+              href="#featured"
+              className="rounded-full border border-white/30 px-6 py-3 text-sm font-bold text-white backdrop-blur-sm transition hover:bg-white/10 active:scale-95"
+            >
+              מוצרים נבחרים
+            </Link>
           </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-10">
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="flex items-center gap-3 rounded-2xl border border-camp-sand-200 bg-white p-4">
-            <TruckIcon className="h-6 w-6 text-camp-forest-700" />
-            <p className="text-sm font-medium text-camp-bark-800">משלוח לכל הארץ, 12-26 ימי עסקים</p>
+          <div className="flex items-center gap-4 rounded-2xl border border-camp-sand-200 bg-white p-5 transition hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-camp-forest-700/10 text-camp-forest-700">
+              <TruckIcon className="h-5 w-5" />
+            </span>
+            <p className="text-sm font-medium text-camp-bark-800">משלוח לכל הארץ, 9-27 ימי עסקים</p>
           </div>
-          <div className="flex items-center gap-3 rounded-2xl border border-camp-sand-200 bg-white p-4">
-            <ShieldIcon className="h-6 w-6 text-camp-forest-700" />
+          <div className="flex items-center gap-4 rounded-2xl border border-camp-sand-200 bg-white p-5 transition hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-camp-forest-700/10 text-camp-forest-700">
+              <ShieldIcon className="h-5 w-5" />
+            </span>
             <p className="text-sm font-medium text-camp-bark-800">מחירים שקופים, ללא עמלות נסתרות</p>
           </div>
-          <div className="flex items-center gap-3 rounded-2xl border border-camp-sand-200 bg-white p-4">
-            <LeafIcon className="h-6 w-6 text-camp-forest-700" />
+          <div className="flex items-center gap-4 rounded-2xl border border-camp-sand-200 bg-white p-5 transition hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-camp-forest-700/10 text-camp-forest-700">
+              <LeafIcon className="h-5 w-5" />
+            </span>
             <p className="text-sm font-medium text-camp-bark-800">קטלוג אוצר ביד לחובבי טבע</p>
           </div>
         </div>

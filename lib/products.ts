@@ -64,6 +64,7 @@ export const products: Product[] = [
     etaDays: [14, 22],
     priceSource: "estimated",
     icon: "stove",
+    imageUrl: "https://images.unsplash.com/photo-1522041350204-22285237eeca?w=900&q=80&auto=format&fit=crop",
     specsHe: ["מתקפלות לגודל כיס", "עמידות ברוח", "משקל: כ-200 גרם", "כולל תיק נשיאה"],
   },
   {
@@ -80,7 +81,7 @@ export const products: Product[] = [
     etaDays: [9, 23],
     priceSource: "cj-live",
     icon: "pillow",
-    imageUrl: "https://cf.cjdropshipping.com/1622799260520.jpg",
+    imageUrl: "https://cf.cjdropshipping.com/1622799260530.jpg",
     specsHe: ["מתנפחת/מתרוקנת בשניות", "משקל: כ-80 גרם", "כולל שקית נשיאה"],
   },
   {
@@ -128,7 +129,7 @@ export const products: Product[] = [
     etaDays: [12, 20],
     priceSource: "estimated",
     icon: "headlamp",
-    imageUrl: "https://images.unsplash.com/photo-1449710146567-1e282fa41f2f?w=800&q=80&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1517457773273-412ec74a18cd?w=900&q=80&auto=format&fit=crop",
     specsHe: ["נטען USB", "עמיד למים IPX5", "מספר מצבי תאורה", "משקל קל במיוחד"],
   },
   {
@@ -145,7 +146,7 @@ export const products: Product[] = [
     etaDays: [9, 23],
     priceSource: "cj-live",
     icon: "chair",
-    imageUrl: "https://images.pexels.com/photos/11441859/pexels-photo-11441859.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageUrl: "https://images.unsplash.com/photo-1580655546467-829c041b5b62?w=900&q=80&auto=format&fit=crop",
     specsHe: ["עומס מקסימלי: עד 120 ק\"ג", "מתקפל לתיק נשיאה", "מסגרת אלומיניום קלה"],
   },
   {
@@ -230,7 +231,7 @@ export const products: Product[] = [
     etaDays: [9, 23],
     priceSource: "cj-live",
     icon: "cookware",
-    imageUrl: "https://cf.cjdropshipping.com/20200904/623002509239.jpg",
+    imageUrl: "https://cf.cjdropshipping.com/4d9d2fd2-4de6-4f0d-90e9-874fb35bb2bc.jpg",
     specsHe: ["אלומיניום אנודייז קל משקל", "כולל סיר, מחבת וכלי אכילה", "מתקפל לגודל קומפקטי"],
   },
   {
