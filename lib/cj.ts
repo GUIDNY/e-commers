@@ -7,31 +7,17 @@ import "server-only";
  * Credentials are read from environment variables only - never hardcode
  * keys here and never import this module from client components.
  *
- * Auth accepts either:
- *  - CJ_EMAIL + CJ_PASSWORD (your CJ login email + the generated API key), or
- *  - CJ_API_KEY_RAW set to the full "<userNum>@api@<secret>" string CJ hands
- *    out on the "Get API Key" page, which is parsed into email/password.
+ * Auth: CJ's getAccessToken endpoint takes a single "apiKey" field - the full
+ * "<userNum>@api@<secret>" string CJ hands out on the "Get API Key" page,
+ * sent as-is (NOT split into email/password - that's a different, legacy
+ * auth mode this API does not accept and returns a misleading "email or
+ * password is wrong" error for).
  */
 
 const BASE_URL = "https://developers.cjdropshipping.com/api2.0/v1";
 
-interface CjCredentials {
-  email: string;
-  password: string;
-}
-
-function resolveCredentials(): CjCredentials | null {
-  const email = process.env.CJ_EMAIL;
-  const password = process.env.CJ_PASSWORD;
-  if (email && password) return { email, password };
-
-  const raw = process.env.CJ_API_KEY_RAW;
-  if (raw) {
-    const match = raw.match(/^(.*@api)@(.+)$/);
-    if (match) return { email: match[1], password: match[2] };
-  }
-
-  return null;
+function resolveApiKey(): string | null {
+  return process.env.CJ_API_KEY_RAW || null;
 }
 
 interface TokenCache {
@@ -75,14 +61,14 @@ async function getAccessToken(): Promise<string | null> {
     return tokenCache.accessToken;
   }
 
-  const creds = resolveCredentials();
-  if (!creds) return null;
+  const apiKey = resolveApiKey();
+  if (!apiKey) return null;
 
   try {
     const json = await fetchJson<CjAuthResponse>(`${BASE_URL}/authentication/getAccessToken`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(creds),
+      body: JSON.stringify({ apiKey }),
     });
 
     if (!json.result || !json.data) return null;

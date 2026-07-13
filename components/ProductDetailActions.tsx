@@ -10,6 +10,17 @@ export function ProductDetailActions({ product }: { product: CatalogEntry }) {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
+  if (product.shipsToIsrael === false) {
+    return (
+      <div className="mt-6 flex flex-col gap-4">
+        <span className="text-3xl font-extrabold text-camp-forest-900">{formatIls(product.priceIls)}</span>
+        <div className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          מוצר זה כרגע לא ניתן למשלוח לישראל מהספק - לא זמין להזמנה.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mt-6 flex flex-col gap-4">
       <div className="flex items-baseline gap-3">

@@ -26,24 +26,30 @@ export function ProductCard({ product }: { product: CatalogEntry }) {
           <div>
             <p className="text-lg font-extrabold text-camp-forest-900">{formatIls(product.priceIls)}</p>
             <p className="text-xs text-camp-bark-800/60">
-              + {formatIls(product.shippingIls)} משלוח לישראל
+              {product.shipsToIsrael === false ? "לא ניתן למשלוח לישראל" : `+ ${formatIls(product.shippingIls)} משלוח לישראל`}
             </p>
           </div>
-          <button
-            onClick={() =>
-              addItem({
-                slug: product.slug,
-                nameHe: product.nameHe,
-                priceIls: product.priceIls,
-                shippingIls: product.shippingIls,
-                icon: product.icon,
-                imageUrl: product.imageUrl,
-              })
-            }
-            className="rounded-full bg-camp-forest-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-camp-forest-600 active:scale-95"
-          >
-            הוסף לעגלה
-          </button>
+          {product.shipsToIsrael === false ? (
+            <span className="rounded-full bg-camp-sand-100 px-4 py-2 text-sm font-semibold text-camp-bark-800/50">
+              לא זמין
+            </span>
+          ) : (
+            <button
+              onClick={() =>
+                addItem({
+                  slug: product.slug,
+                  nameHe: product.nameHe,
+                  priceIls: product.priceIls,
+                  shippingIls: product.shippingIls,
+                  icon: product.icon,
+                  imageUrl: product.imageUrl,
+                })
+              }
+              className="rounded-full bg-camp-forest-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-camp-forest-600 active:scale-95"
+            >
+              הוסף לעגלה
+            </button>
+          )}
         </div>
       </div>
     </div>

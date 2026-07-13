@@ -12,6 +12,12 @@ export interface Product {
   slug: string;
   /** CJdropshipping product id (pid) - filled in once matched via live API */
   cjPid?: string;
+  /** CJdropshipping cheapest variant id (vid) used for the live freight quote below */
+  cjVid?: string;
+  /** False when CJ's freight calculator returned no shipping line to Israel for this
+   * product (e.g. blades/sensitive goods) - hides the "add to cart" action instead of
+   * accepting an order we can't actually fulfill. Defaults to true when omitted. */
+  shipsToIsrael?: boolean;
   nameHe: string;
   nameEn: string;
   descriptionHe: string;
