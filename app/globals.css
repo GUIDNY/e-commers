@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+:root {
+  --background: #faf7f0;
+  --foreground: #24201a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-heebo);
+
+  --color-camp-forest-900: #1f3327;
+  --color-camp-forest-700: #2f4f3e;
+  --color-camp-forest-600: #3f6b52;
+  --color-camp-forest-500: #4d8064;
+  --color-camp-amber-600: #d97706;
+  --color-camp-amber-500: #f59e0b;
+  --color-camp-sand-50: #faf7f0;
+  --color-camp-sand-100: #f3ecd9;
+  --color-camp-sand-200: #e8dcc0;
+  --color-camp-bark-800: #4a3728;
+  --color-camp-bark-600: #6b4226;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #17140f;
+    --foreground: #f3ecd9;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+::selection {
+  background: var(--color-camp-amber-500);
+  color: white;
+}
