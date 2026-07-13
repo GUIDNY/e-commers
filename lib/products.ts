@@ -60,6 +60,7 @@ export const products: Product[] = [
     etaDays: [14, 22],
     priceSource: "estimated",
     icon: "stove",
+    imageUrl: "https://images.pexels.com/photos/3296453/pexels-photo-3296453.jpeg?auto=compress&cs=tinysrgb&w=800",
     specsHe: ["מתקפלות לגודל כיס", "עמידות ברוח", "משקל: כ-200 גרם", "כולל תיק נשיאה"],
   },
   {
@@ -74,6 +75,7 @@ export const products: Product[] = [
     etaDays: [12, 20],
     priceSource: "estimated",
     icon: "pillow",
+    imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5f400f6f9?w=800&q=80&auto=format&fit=crop",
     specsHe: ["מתנפחת/מתרוקנת בשניות", "משקל: כ-80 גרם", "כולל שקית נשיאה"],
   },
   {
@@ -149,6 +151,7 @@ export const products: Product[] = [
     etaDays: [12, 20],
     priceSource: "estimated",
     icon: "water-filter",
+    imageUrl: "https://images.pexels.com/photos/355821/pexels-photo-355821.jpeg?auto=compress&cs=tinysrgb&w=800",
     specsHe: ["מסננת עד 99.9% מחיידקים", "אורך חיים: כ-1500 ליטר", "קלה ואולטרה-קומפקטית"],
   },
   {
@@ -163,6 +166,7 @@ export const products: Product[] = [
     etaDays: [16, 25],
     priceSource: "estimated",
     icon: "sleeping-pad",
+    imageUrl: "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800&q=80&auto=format&fit=crop",
     specsHe: ["בידוד תרמי", "מתנפח ידנית תוך דקות", "מתקפל לגודל קומפקטי"],
   },
   {
