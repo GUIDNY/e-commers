@@ -21,7 +21,12 @@ export async function getCatalog(): Promise<CatalogEntry[]> {
       if (product.cjPid) {
         const cj = await getCjProduct(product.cjPid);
         if (cj?.sellPrice) {
-          live = { ...product, costUsd: parseCjCost(cj.sellPrice), priceSource: "cj-live" };
+          live = {
+            ...product,
+            costUsd: parseCjCost(cj.sellPrice),
+            priceSource: "cj-live",
+            imageUrl: cj.productImage || product.imageUrl,
+          };
         }
       }
       return {

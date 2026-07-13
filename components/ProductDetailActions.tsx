@@ -45,6 +45,7 @@ export function ProductDetailActions({ product }: { product: CatalogEntry }) {
                 priceIls: product.priceIls,
                 shippingIls: product.shippingIls,
                 icon: product.icon,
+                imageUrl: product.imageUrl,
               },
               qty
             );

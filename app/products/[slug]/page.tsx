@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getCatalog, getCatalogEntry } from "@/lib/catalog";
-import { ProductIcon, TruckIcon } from "@/components/Icons";
+import { TruckIcon } from "@/components/Icons";
+import { ProductThumb } from "@/components/ProductThumb";
 import { ProductDetailActions } from "@/components/ProductDetailActions";
 
 export async function generateStaticParams() {
@@ -28,8 +29,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </nav>
 
       <div className="grid gap-10 md:grid-cols-2">
-        <div className="grid aspect-square place-items-center rounded-3xl bg-camp-sand-100 text-camp-forest-700">
-          <ProductIcon icon={product.icon} className="h-40 w-40" />
+        <div className="grid aspect-square place-items-center overflow-hidden rounded-3xl bg-camp-sand-100 text-camp-forest-700">
+          <ProductThumb imageUrl={product.imageUrl} icon={product.icon} alt={product.nameHe} iconClassName="h-40 w-40" />
         </div>
 
         <div>

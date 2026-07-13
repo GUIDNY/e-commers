@@ -8,6 +8,7 @@ export interface CartItem {
   priceIls: number;
   shippingIls: number;
   icon: string;
+  imageUrl?: string;
   qty: number;
 }
 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCart } from "@/components/CartContext";
 import { formatIls } from "@/lib/pricing";
-import { ProductIcon } from "@/components/Icons";
+import { ProductThumb } from "@/components/ProductThumb";
 
 export default function CartPage() {
   const { items, setQty, removeItem, subtotalIls, shippingIls, totalIls } = useCart();
@@ -33,8 +33,8 @@ export default function CartPage() {
             key={item.slug}
             className="flex items-center gap-4 rounded-2xl border border-camp-sand-200 bg-white p-4"
           >
-            <Link href={`/products/${item.slug}`} className="grid h-16 w-16 shrink-0 place-items-center rounded-xl bg-camp-sand-100 text-camp-forest-700">
-              <ProductIcon icon={item.icon} className="h-9 w-9" />
+            <Link href={`/products/${item.slug}`} className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-camp-sand-100 text-camp-forest-700">
+              <ProductThumb imageUrl={item.imageUrl} icon={item.icon} alt={item.nameHe} iconClassName="h-9 w-9" />
             </Link>
             <div className="flex-1">
               <Link href={`/products/${item.slug}`} className="font-semibold text-camp-bark-800 hover:text-camp-forest-700">

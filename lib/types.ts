@@ -24,8 +24,10 @@ export interface Product {
   etaDays: [number, number];
   /** Whether the price is a live CJ price or a research-based estimate */
   priceSource: "cj-live" | "estimated";
-  /** key used to pick a fallback SVG icon illustration */
+  /** key used to pick a fallback SVG icon illustration when no real photo is available */
   icon: string;
+  /** Real product photo URL from CJ - only populated once a live cjPid lookup succeeds */
+  imageUrl?: string;
   featured?: boolean;
   specsHe: string[];
 }
