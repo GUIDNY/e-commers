@@ -5,27 +5,89 @@ import Link from "next/link";
 import { useCart } from "@/components/CartContext";
 import { formatIls } from "@/lib/pricing";
 
+interface CheckoutResult {
+  orderNumber: string;
+  cjOrder: { ok: boolean; orderId?: string; orderStatus?: string; message: string };
+  skippedSlugs: string[];
+}
+
 export default function CheckoutPage() {
   const { items, subtotalIls, shippingIls, totalIls, clear } = useCart();
-  const [submitted, setSubmitted] = useState<string | null>(null);
+  const [result, setResult] = useState<CheckoutResult | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const orderId = `CE-${Date.now().toString().slice(-8)}`;
-    setSubmitted(orderId);
-    clear();
+    setSubmitting(true);
+    setError(null);
+
+    const form = new FormData(e.currentTarget);
+    const orderNumber = `CE-${Date.now().toString().slice(-8)}`;
+    const shipping = {
+      fullName: String(form.get("fullName") || ""),
+      phone: String(form.get("phone") || ""),
+      email: String(form.get("email") || ""),
+      city: String(form.get("city") || ""),
+      address: String(form.get("address") || ""),
+      zip: String(form.get("zip") || ""),
+    };
+
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderNumber,
+          shipping,
+          items: items.map((i) => ({ slug: i.slug, qty: i.qty })),
+        }),
+      });
+      const data = await res.json();
+      setResult({ orderNumber, cjOrder: data.cjOrder, skippedSlugs: data.skippedSlugs });
+      clear();
+    } catch {
+      setError("שליחת ההזמנה נכשלה - נסו שוב או צרו קשר ישירות.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
-  if (submitted) {
+  if (result) {
     return (
       <div className="mx-auto max-w-xl px-4 py-20 text-center">
         <h1 className="text-2xl font-extrabold text-camp-forest-900">בקשת ההזמנה התקבלה! 🎉</h1>
         <p className="mt-3 text-camp-bark-800/80">
-          מספר הזמנה: <span className="font-mono font-semibold">{submitted}</span>
+          מספר הזמנה: <span className="font-mono font-semibold">{result.orderNumber}</span>
         </p>
         <p className="mt-2 text-camp-bark-800/70">
           ניצור איתך קשר בהקדם לאישור סופי ותשלום מאובטח. תודה שקנית ב-קמפאיזי!
         </p>
+
+        <div className="mt-6 rounded-xl border border-camp-sand-200 bg-camp-sand-50 p-4 text-right text-sm">
+          {result.cjOrder.ok ? (
+            <p className="text-camp-forest-900">
+              ✅ נפתחה הזמנה מתאימה אצל הספק (CJdropshipping)
+              {result.cjOrder.orderId && (
+                <>
+                  {" "}
+                  - מספר הזמנה: <span className="font-mono">{result.cjOrder.orderId}</span>
+                </>
+              )}
+              . ההזמנה ממתינה לאישור/תשלום ידני שלך בדשבורד של CJ לפני שהיא נשלחת בפועל.
+            </p>
+          ) : (
+            <p className="text-camp-bark-800/70">
+              ⚠️ לא נפתחה הזמנה אוטומטית אצל הספק ({result.cjOrder.message}) - יש להזמין את הפריטים ידנית.
+            </p>
+          )}
+          {result.skippedSlugs.length > 0 && (
+            <p className="mt-2 text-camp-bark-800/70">
+              המוצרים הבאים לא מקושרים לספק בפועל וטרם דורשים הזמנה ידנית: {result.skippedSlugs.join(", ")}.
+            </p>
+          )}
+        </div>
+
         <Link
           href="/products"
           className="mt-8 inline-block rounded-full bg-camp-forest-700 px-6 py-3 text-sm font-bold text-white hover:bg-camp-forest-600"
@@ -71,11 +133,14 @@ export default function CheckoutPage() {
           <Field label="כתובת למשלוח" name="address" required />
           <Field label="הערות להזמנה (אופציונלי)" name="notes" textarea />
 
+          {error && <p className="text-sm text-red-600">{error}</p>}
+
           <button
             type="submit"
-            className="w-full rounded-full bg-camp-amber-600 px-6 py-3 text-sm font-bold text-white hover:bg-camp-amber-500"
+            disabled={submitting}
+            className="w-full rounded-full bg-camp-amber-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-camp-amber-500 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            שליחת בקשת הזמנה
+            {submitting ? "שולח..." : "שליחת בקשת הזמנה"}
           </button>
         </form>
 

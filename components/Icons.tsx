@@ -206,6 +206,16 @@ export function ShieldIcon(props: IconProps) {
   );
 }
 
+export function BoxIcon(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="m3.5 7 8.5-4 8.5 4-8.5 4-8.5-4Z" />
+      <path d="M3.5 7v10l8.5 4 8.5-4V7" />
+      <path d="M12 11v10" />
+    </Base>
+  );
+}
+
 export function MenuIcon(props: IconProps) {
   return (
     <Base {...props}>

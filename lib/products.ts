@@ -33,6 +33,14 @@ export const products: Product[] = [
       "זמן פעולה: כ-70-90 דקות בטעינה מלאה",
       "משקל קל, מתאים לתרמיל גב",
     ],
+    packageContentsHe: [
+      "משאבת מים חשמלית - יחידה אחת",
+      "ראש מקלחת",
+      "2 טבעות אטימה",
+      "מעמד תלייה",
+      "צינור PVC",
+      "כבל טעינה USB",
+    ],
   },
   {
     slug: "led-camping-lantern-rechargeable",
@@ -51,6 +59,7 @@ export const products: Product[] = [
     imageUrl: "https://oss-cf.cjdropshipping.com/product/2025/06/29/09/48f59e72-b283-4b42-8c67-381bdacb249d_trans.jpeg",
     featured: true,
     specsHe: ["נטען USB-C", "3 מצבי תאורה", "מתקפל לגודל כף יד", "וו תלייה מובנה"],
+    packageContentsHe: ["פנס LED - יחידה אחת", "כבל טעינה", "הוראות הפעלה"],
   },
   {
     slug: "mini-windproof-camping-stove",
@@ -66,6 +75,11 @@ export const products: Product[] = [
     icon: "stove",
     imageUrl: "https://images.unsplash.com/photo-1522041350204-22285237eeca?w=900&q=80&auto=format&fit=crop",
     specsHe: ["מתקפלות לגודל כיס", "עמידות ברוח", "משקל: כ-200 גרם", "כולל תיק נשיאה"],
+    packageContentsHe: [
+      "גוף הכיריים המתקפל - יחידה אחת",
+      "תיק נשיאה",
+      "⚠️ לא כולל מיכל גז - יש לרכוש בנפרד בארץ (לא ניתן למשלוח בדואר בינלאומי מסיבות בטיחות)",
+    ],
   },
   {
     slug: "inflatable-travel-pillow",
@@ -83,6 +97,7 @@ export const products: Product[] = [
     icon: "pillow",
     imageUrl: "https://cf.cjdropshipping.com/1622799260530.jpg",
     specsHe: ["מתנפחת/מתרוקנת בשניות", "משקל: כ-80 גרם", "כולל שקית נשיאה"],
+    packageContentsHe: ["כרית מתנפחת - יחידה אחת", "שקית נשיאה עם מיתר הידוק"],
   },
   {
     slug: "solar-power-bank-20000mah",
@@ -99,6 +114,7 @@ export const products: Product[] = [
     imageUrl: "https://images.pexels.com/photos/518530/pexels-photo-518530.jpeg?auto=compress&cs=tinysrgb&w=800",
     featured: true,
     specsHe: ["קיבולת 20000mAh", "פאנל טעינה סולארי", "פנס LED מובנה", "2 יציאות USB יציאה"],
+    packageContentsHe: ["סוללת גיבוי - יחידה אחת", "כבל טעינה USB"],
   },
   {
     slug: "double-camping-hammock",
@@ -116,6 +132,12 @@ export const products: Product[] = [
     icon: "hammock",
     imageUrl: "https://cf.cjdropshipping.com/d062f80c-d6f7-4444-8019-cf57fe415589.jpg",
     specsHe: ["עומס מקסימלי: עד 200 ק\"ג", "כולל רצועות וקרביטנים", "מתקפל לגודל כף יד"],
+    packageContentsHe: [
+      "ערסל - יחידה אחת",
+      "2 רצועות תלייה מתכווננות (אורך כ-2 מ׳ כל אחת)",
+      "2 קרבינרים",
+      "שקית נשיאה",
+    ],
   },
   {
     slug: "usb-led-headlamp",
@@ -131,6 +153,7 @@ export const products: Product[] = [
     icon: "headlamp",
     imageUrl: "https://images.unsplash.com/photo-1517457773273-412ec74a18cd?w=900&q=80&auto=format&fit=crop",
     specsHe: ["נטען USB", "עמיד למים IPX5", "מספר מצבי תאורה", "משקל קל במיוחד"],
+    packageContentsHe: ["פנס ראש - יחידה אחת", "רצועת ראש מתכווננת", "כבל טעינה USB"],
   },
   {
     slug: "folding-camping-chair",
@@ -148,6 +171,7 @@ export const products: Product[] = [
     icon: "chair",
     imageUrl: "https://images.unsplash.com/photo-1580655546467-829c041b5b62?w=900&q=80&auto=format&fit=crop",
     specsHe: ["עומס מקסימלי: עד 120 ק\"ג", "מתקפל לתיק נשיאה", "מסגרת אלומיניום קלה"],
+    packageContentsHe: ["כיסא מתקפל - יחידה אחת (רגליים מאלומיניום, לא כולל תיק נשיאה נפרד)"],
   },
   {
     slug: "portable-water-filter-straw",
@@ -165,6 +189,7 @@ export const products: Product[] = [
     icon: "water-filter",
     imageUrl: "https://cf.cjdropshipping.com/2054/48845080815735.jpg",
     specsHe: ["מסננת עד 99.9% מחיידקים", "אורך חיים: כ-1500 ליטר", "קלה ואולטרה-קומפקטית"],
+    packageContentsHe: ["קש סינון מים - יחידה אחת בלבד"],
   },
   {
     slug: "ultralight-inflatable-sleeping-pad",
@@ -182,6 +207,7 @@ export const products: Product[] = [
     icon: "sleeping-pad",
     imageUrl: "https://cf.cjdropshipping.com/aec9f308-80aa-4caf-ae51-4a818f86c7ee.jpg",
     specsHe: ["בידוד תרמי", "מתנפח ידנית תוך דקות", "מתקפל לגודל קומפקטי"],
+    packageContentsHe: ["מזרן שינה מתנפח עם משאבה מובנית - יחידה אחת"],
   },
   {
     slug: "led-mosquito-camping-lantern",
@@ -199,6 +225,7 @@ export const products: Product[] = [
     icon: "bug-lantern",
     imageUrl: "https://oss-cf.cjdropshipping.com/product/2024/06/21/07/27f70915-b386-4699-bd18-6d7f7ca814bf.jpg",
     specsHe: ["קוטל יתושים אלקטרוני מובנה", "נטען USB", "וו תלייה לאוהל"],
+    packageContentsHe: ["פנס קמפינג עם קוטל יתושים - יחידה אחת"],
   },
   {
     slug: "folding-portable-bbq-grill",
@@ -216,6 +243,7 @@ export const products: Product[] = [
     icon: "grill",
     imageUrl: "https://cf.cjdropshipping.com/1618389070445.jpg",
     specsHe: ["גוף נירוסטה עמיד", "מתקפל תוך שניות", "כולל תיק נשיאה"],
+    packageContentsHe: ["מנגל מתקפל - יחידה אחת", "תיק בד לנשיאה"],
   },
   {
     slug: "portable-cookware-mess-kit",
@@ -233,6 +261,7 @@ export const products: Product[] = [
     icon: "cookware",
     imageUrl: "https://cf.cjdropshipping.com/4d9d2fd2-4de6-4f0d-90e9-874fb35bb2bc.jpg",
     specsHe: ["אלומיניום אנודייז קל משקל", "כולל סיר, מחבת וכלי אכילה", "מתקפל לגודל קומפקטי"],
+    packageContentsHe: ["סיר עם מכסה", "מחבת", "כפית, סכין ומזלג מתקפלים", "תיק נשיאה"],
   },
   {
     slug: "multi-tool-survival-knife",
@@ -251,6 +280,7 @@ export const products: Product[] = [
     icon: "multi-tool",
     imageUrl: "https://images.pexels.com/photos/2599276/pexels-photo-2599276.jpeg?auto=compress&cs=tinysrgb&w=800",
     specsHe: ["פלדת נירוסטה", "מספר כלים במכשיר אחד", "כולל נרתיק נשיאה"],
+    packageContentsHe: ["כלי רב-תכליתי - יחידה אחת", "נרתיק נשיאה"],
   },
 ];
 

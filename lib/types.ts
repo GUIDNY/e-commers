@@ -36,4 +36,9 @@ export interface Product {
   imageUrl?: string;
   featured?: boolean;
   specsHe: string[];
+  /** Exact package contents - "what arrives in the box". Sourced from the real CJ
+   * packing list where a cjPid is matched (see lib/products.ts comments per item);
+   * a reasonable generic description otherwise. Shown as its own section on the
+   * product page so customers know precisely what ships, not just marketing specs. */
+  packageContentsHe: string[];
 }

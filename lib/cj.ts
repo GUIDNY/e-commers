@@ -152,3 +152,100 @@ export function parseCjCost(sellPrice: string): number {
   const value = Number.parseFloat(first ?? "");
   return Number.isFinite(value) ? value : 0;
 }
+
+export interface CjOrderShippingDetails {
+  fullName: string;
+  phone: string;
+  email?: string;
+  city: string;
+  address: string;
+  zip?: string;
+}
+
+export interface CjOrderLineItem {
+  vid: string;
+  quantity: number;
+}
+
+interface CjCreateOrderResponse {
+  code: number;
+  result: boolean;
+  message: string;
+  data?: {
+    orderId?: string;
+    orderNumber: string;
+    orderStatus: string;
+    productAmount?: number;
+    postageAmount?: number;
+    orderAmount?: number;
+  };
+}
+
+export interface CjOrderOutcome {
+  ok: boolean;
+  orderId?: string;
+  orderStatus?: string;
+  message: string;
+}
+
+/**
+ * Creates a CJdropshipping order for the given line items and shipping address,
+ * using payType: 3 ("create only" - CJ never attempts payment on our behalf).
+ * The order lands in the CJ dashboard as a pending order the account owner must
+ * review and manually fund/confirm before it ships - equivalent to a "draft" order,
+ * never an automatic real purchase. Returns ok:false (never throws) if CJ is
+ * unreachable/unconfigured or the line items list is empty, so checkout always
+ * succeeds locally even when CJ order creation isn't possible.
+ */
+export async function createCjOrder(
+  orderNumber: string,
+  shipping: CjOrderShippingDetails,
+  items: CjOrderLineItem[]
+): Promise<CjOrderOutcome> {
+  if (items.length === 0) {
+    return { ok: false, message: "No CJ-linked line items in this order - nothing to create on CJ." };
+  }
+
+  const token = await getAccessToken();
+  if (!token) {
+    return { ok: false, message: "CJ API not configured or unreachable." };
+  }
+
+  try {
+    const json = await fetchJson<CjCreateOrderResponse>(`${BASE_URL}/shopping/order/createOrderV2`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "CJ-Access-Token": token },
+      body: JSON.stringify({
+        orderNumber,
+        shippingCustomerName: shipping.fullName,
+        shippingAddress: shipping.address,
+        shippingCity: shipping.city,
+        shippingProvince: shipping.city,
+        shippingCountryCode: "IL",
+        shippingCountry: "Israel",
+        shippingZip: shipping.zip || "",
+        shippingPhone: shipping.phone,
+        email: shipping.email || "",
+        logisticName: "CJPacket Liquid Line",
+        fromCountryCode: "CN",
+        payType: 3,
+        orderFlow: 1,
+        platform: "Api",
+        products: items,
+      }),
+    });
+
+    if (!json.result || !json.data) {
+      return { ok: false, message: json.message || "CJ order creation failed." };
+    }
+
+    return {
+      ok: true,
+      orderId: json.data.orderId,
+      orderStatus: json.data.orderStatus,
+      message: "CJ order created (pending your review/approval in the CJ dashboard).",
+    };
+  } catch {
+    return { ok: false, message: "CJ order creation request failed (network/timeout)." };
+  }
+}

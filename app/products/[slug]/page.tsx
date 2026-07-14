@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getCatalog, getCatalogEntry } from "@/lib/catalog";
-import { TruckIcon } from "@/components/Icons";
+import { TruckIcon, BoxIcon } from "@/components/Icons";
 import { ProductThumb } from "@/components/ProductThumb";
 import { ProductDetailActions } from "@/components/ProductDetailActions";
 
@@ -49,6 +49,26 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           )}
 
           <p className="mt-6 leading-relaxed text-camp-bark-800">{product.descriptionHe}</p>
+
+          <div className="mt-6 rounded-xl border border-camp-sand-200 bg-white p-4">
+            <h2 className="mb-3 flex items-center gap-2 font-bold text-camp-forest-900">
+              <BoxIcon className="h-5 w-5 text-camp-amber-600" />
+              מה בדיוק מגיע באריזה
+            </h2>
+            <ul className="space-y-2 text-sm text-camp-bark-800">
+              {product.packageContentsHe.map((item) => (
+                <li key={item} className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-camp-forest-700" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 text-xs text-camp-bark-800/50">
+              {product.priceSource === "cj-live"
+                ? "רשימת האריזה מבוססת על נתוני היצרן בפועל."
+                : "רשימת אריזה משוערת - טרם אומתה מול נתוני יצרן חיים."}
+            </p>
+          </div>
 
           <div className="mt-6">
             <h2 className="mb-3 font-bold text-camp-forest-900">מפרט</h2>
