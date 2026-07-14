@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCart } from "@/components/CartContext";
 import { formatIls } from "@/lib/pricing";
 import { ProductThumb } from "@/components/ProductThumb";
-import { CartIcon } from "@/components/Icons";
+import { CartIcon, TrashIcon } from "@/components/Icons";
 
 export default function CartPage() {
   const { items, setQty, removeItem, subtotalIls, shippingIls, totalIls } = useCart();
@@ -35,7 +35,7 @@ export default function CartPage() {
         {items.map((item) => (
           <div
             key={item.slug}
-            className="flex items-center gap-4 rounded-2xl border border-camp-sand-200 bg-white p-4"
+            className="flex items-center gap-4 rounded-2xl border border-camp-sand-200 bg-white p-4 transition hover:shadow-[0_4px_16px_rgba(31,51,39,0.08)]"
           >
             <Link href={`/products/${item.slug}`} className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-camp-sand-100 text-camp-forest-700">
               <ProductThumb imageUrl={item.imageUrl} icon={item.icon} alt={item.nameHe} iconClassName="h-9 w-9" />
@@ -48,7 +48,7 @@ export default function CartPage() {
             </div>
             <div className="flex items-center rounded-full border border-camp-sand-200">
               <button
-                className="grid h-9 w-9 place-items-center text-lg font-bold text-camp-forest-700"
+                className="grid h-9 w-9 place-items-center text-lg font-bold text-camp-forest-700 transition hover:bg-camp-sand-100"
                 onClick={() => setQty(item.slug, item.qty - 1)}
                 aria-label="הפחת כמות"
               >
@@ -56,7 +56,7 @@ export default function CartPage() {
               </button>
               <span className="w-7 text-center font-semibold">{item.qty}</span>
               <button
-                className="grid h-9 w-9 place-items-center text-lg font-bold text-camp-forest-700"
+                className="grid h-9 w-9 place-items-center text-lg font-bold text-camp-forest-700 transition hover:bg-camp-sand-100"
                 onClick={() => setQty(item.slug, item.qty + 1)}
                 aria-label="הוסף כמות"
               >
@@ -66,16 +66,16 @@ export default function CartPage() {
             <p className="w-20 text-left font-bold text-camp-forest-900">{formatIls(item.priceIls * item.qty)}</p>
             <button
               onClick={() => removeItem(item.slug)}
-              className="text-sm text-red-600/80 hover:text-red-700"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-camp-bark-800/40 transition hover:bg-red-50 hover:text-red-600"
               aria-label="הסר מהעגלה"
             >
-              הסר
+              <TrashIcon className="h-4 w-4" />
             </button>
           </div>
         ))}
       </div>
 
-      <div className="mt-8 mr-auto w-full max-w-sm space-y-2 rounded-2xl border border-camp-sand-200 bg-camp-sand-50 p-5">
+      <div className="mt-8 mr-auto w-full max-w-sm space-y-2 rounded-2xl border border-camp-sand-200 bg-camp-sand-50 p-5 shadow-[0_4px_16px_rgba(31,51,39,0.06)]">
         <div className="flex justify-between text-sm text-camp-bark-800">
           <span>סכום ביניים</span>
           <span>{formatIls(subtotalIls)}</span>
@@ -90,7 +90,7 @@ export default function CartPage() {
         </div>
         <Link
           href="/checkout"
-          className="mt-3 block rounded-full bg-camp-amber-600 px-6 py-3 text-center text-sm font-bold text-white hover:bg-camp-amber-500"
+          className="mt-3 block rounded-full bg-camp-amber-600 px-6 py-3 text-center text-sm font-bold text-white shadow-md shadow-camp-amber-600/20 transition hover:bg-camp-amber-500 active:scale-[0.98]"
         >
           המשך לתשלום
         </Link>

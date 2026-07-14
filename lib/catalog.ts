@@ -25,7 +25,10 @@ export async function getCatalog(): Promise<CatalogEntry[]> {
             ...product,
             costUsd: parseCjCost(cj.sellPrice),
             priceSource: "cj-live",
-            imageUrl: cj.productImage || product.imageUrl,
+            // Prefer our curated photo (hand-reviewed for clarity/no marketing
+            // banners) over CJ's own live image - only fall back to CJ's photo
+            // when we haven't picked one ourselves.
+            imageUrl: product.imageUrl || cj.productImage,
           };
         }
       }

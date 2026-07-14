@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartContext";
 import { formatIls } from "@/lib/pricing";
+import { ShieldIcon } from "@/components/Icons";
 
 interface CheckoutResult {
   orderNumber: string;
@@ -56,6 +57,9 @@ export default function CheckoutPage() {
   if (result) {
     return (
       <div className="mx-auto max-w-xl px-4 py-20 text-center">
+        <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-camp-forest-700/10 text-camp-forest-700">
+          <ShieldIcon className="h-7 w-7" />
+        </div>
         <h1 className="text-2xl font-extrabold text-camp-forest-900">בקשת ההזמנה התקבלה! 🎉</h1>
         <p className="mt-3 text-camp-bark-800/80">
           מספר הזמנה: <span className="font-mono font-semibold">{result.orderNumber}</span>
@@ -120,7 +124,10 @@ export default function CheckoutPage() {
       </p>
 
       <div className="grid gap-8 md:grid-cols-[1.3fr_1fr]">
-        <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-camp-sand-200 bg-white p-6">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 rounded-2xl border border-camp-sand-200 bg-white p-6 shadow-[0_4px_20px_rgba(31,51,39,0.06)]"
+        >
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="שם מלא" name="fullName" required />
             <Field label="טלפון" name="phone" type="tel" required />
@@ -138,13 +145,13 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-full bg-camp-amber-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-camp-amber-500 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-full bg-camp-amber-600 px-6 py-3 text-sm font-bold text-white shadow-md shadow-camp-amber-600/20 transition hover:bg-camp-amber-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? "שולח..." : "שליחת בקשת הזמנה"}
           </button>
         </form>
 
-        <div className="h-fit space-y-3 rounded-2xl border border-camp-sand-200 bg-camp-sand-50 p-5">
+        <div className="h-fit space-y-3 rounded-2xl border border-camp-sand-200 bg-camp-sand-50 p-5 shadow-[0_4px_16px_rgba(31,51,39,0.06)]">
           <h2 className="font-bold text-camp-forest-900">סיכום הזמנה</h2>
           <ul className="space-y-1 text-sm text-camp-bark-800">
             {items.map((item) => (
@@ -197,14 +204,14 @@ function Field({
           name={name}
           required={required}
           rows={3}
-          className="mt-1 w-full rounded-xl border border-camp-sand-200 px-3 py-2 outline-none focus:border-camp-forest-600"
+          className="mt-1 w-full rounded-xl border border-camp-sand-200 px-3 py-2 outline-none transition focus:border-camp-forest-600 focus:ring-2 focus:ring-camp-forest-600/15"
         />
       ) : (
         <input
           name={name}
           type={type}
           required={required}
-          className="mt-1 w-full rounded-xl border border-camp-sand-200 px-3 py-2 outline-none focus:border-camp-forest-600"
+          className="mt-1 w-full rounded-xl border border-camp-sand-200 px-3 py-2 outline-none transition focus:border-camp-forest-600 focus:ring-2 focus:ring-camp-forest-600/15"
         />
       )}
     </label>

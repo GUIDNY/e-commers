@@ -16,7 +16,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-camp-sand-200 bg-camp-sand-50/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-camp-sand-200 bg-camp-sand-50/90 shadow-[0_1px_3px_rgba(31,51,39,0.06)] backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center gap-2 text-camp-forest-900">
           <span className="grid h-9 w-9 place-items-center rounded-full bg-camp-forest-700 text-camp-sand-50">
