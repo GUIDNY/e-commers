@@ -1,22 +1,56 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getCatalog, getCatalogEntry } from "@/lib/catalog";
+import { getCatalog, getCatalogEntry, CatalogEntry } from "@/lib/catalog";
 import { TruckIcon, BoxIcon } from "@/components/Icons";
 import { ProductThumb } from "@/components/ProductThumb";
 import { ProductDetailActions } from "@/components/ProductDetailActions";
+import { ProductFaq } from "@/components/ProductFaq";
+import { CrossSellStrip } from "@/components/CrossSellStrip";
 
 export async function generateStaticParams() {
   const catalog = await getCatalog();
   return catalog.map((p) => ({ slug: p.slug }));
 }
 
+function productJsonLd(product: CatalogEntry, siteUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.nameHe,
+    description: product.descriptionHe,
+    image: product.imageUrl,
+    sku: product.slug,
+    offers: {
+      "@type": "Offer",
+      url: `${siteUrl}/products/${product.slug}`,
+      priceCurrency: "ILS",
+      price: product.priceIls,
+      availability:
+        product.shipsToIsrael === false ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+    },
+  };
+}
+
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = await getCatalogEntry(slug);
+  const [product, catalog] = await Promise.all([getCatalogEntry(slug), getCatalog()]);
   if (!product) notFound();
+
+  const related = catalog.filter((p) => p.slug !== slug && p.category === product.category).slice(0, 4);
+  const fallbackRelated =
+    related.length > 0 ? related : catalog.filter((p) => p.slug !== slug && p.shipsToIsrael !== false).slice(0, 4);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger -- static JSON-LD we generate ourselves, not user input
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            productJsonLd(product, process.env.NEXT_PUBLIC_SITE_URL || "https://e-commerss-alpha.vercel.app")
+          ),
+        }}
+      />
       <nav className="mb-6 text-sm text-camp-bark-800/70">
         <Link href="/" className="hover:underline">
           בית
@@ -81,8 +115,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               ))}
             </ul>
           </div>
+
+          <ProductFaq product={product} />
         </div>
       </div>
+
+      {fallbackRelated.length > 0 && <CrossSellStrip products={fallbackRelated} />}
     </div>
   );
 }
