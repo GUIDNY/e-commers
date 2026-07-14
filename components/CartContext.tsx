@@ -15,6 +15,10 @@ export interface CartItem {
 interface CartContextValue {
   items: CartItem[];
   addItem: (item: Omit<CartItem, "qty">, qty?: number) => void;
+  /** Replaces the entire cart with just this one item - for "buy now" flows
+   * that skip the cart and go straight to checkout, without merging into
+   * whatever else the customer already had in their cart. */
+  buyNow: (item: Omit<CartItem, "qty">, qty?: number) => void;
   removeItem: (slug: string) => void;
   setQty: (slug: string, qty: number) => void;
   clear: () => void;
@@ -66,6 +70,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const buyNow: CartContextValue["buyNow"] = (item, qty = 1) => {
+    setItems([{ ...item, qty }]);
+  };
+
   const removeItem = (slug: string) => setItems((prev) => prev.filter((i) => i.slug !== slug));
 
   const setQty = (slug: string, qty: number) =>
@@ -86,6 +94,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value: CartContextValue = {
     items,
     addItem,
+    buyNow,
     removeItem,
     setQty,
     clear,

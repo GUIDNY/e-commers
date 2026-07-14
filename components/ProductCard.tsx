@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { CatalogEntry } from "@/lib/catalog";
 import { formatIls } from "@/lib/pricing";
 import { ProductThumb } from "./ProductThumb";
@@ -9,8 +10,18 @@ import { useCart } from "./CartContext";
 import { CartIcon, CheckIcon } from "./Icons";
 
 export function ProductCard({ product }: { product: CatalogEntry }) {
-  const { addItem } = useCart();
+  const { addItem, buyNow } = useCart();
+  const router = useRouter();
   const [added, setAdded] = useState(false);
+
+  const cartItem = {
+    slug: product.slug,
+    nameHe: product.nameHe,
+    priceIls: product.priceIls,
+    shippingIls: product.shippingIls,
+    icon: product.icon,
+    imageUrl: product.imageUrl,
+  };
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-camp-sand-200 bg-white transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(31,51,39,0.12)]">
@@ -41,14 +52,7 @@ export function ProductCard({ product }: { product: CatalogEntry }) {
           ) : (
             <button
               onClick={() => {
-                addItem({
-                  slug: product.slug,
-                  nameHe: product.nameHe,
-                  priceIls: product.priceIls,
-                  shippingIls: product.shippingIls,
-                  icon: product.icon,
-                  imageUrl: product.imageUrl,
-                });
+                addItem(cartItem);
                 setAdded(true);
                 setTimeout(() => setAdded(false), 1500);
               }}
@@ -59,6 +63,17 @@ export function ProductCard({ product }: { product: CatalogEntry }) {
             </button>
           )}
         </div>
+        {product.shipsToIsrael !== false && (
+          <button
+            onClick={() => {
+              buyNow(cartItem);
+              router.push("/checkout");
+            }}
+            className="mt-1 w-full rounded-full bg-camp-amber-600 py-2 text-xs font-bold text-white transition hover:bg-camp-amber-500 active:scale-95"
+          >
+            קנה עכשיו
+          </button>
+        )}
       </div>
     </div>
   );
