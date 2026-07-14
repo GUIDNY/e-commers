@@ -43,25 +43,34 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-10">
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div className="flex items-center gap-4 rounded-2xl border border-camp-sand-200 bg-white p-5 transition hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-camp-forest-700/10 text-camp-forest-700">
-              <TruckIcon className="h-5 w-5" />
+      <section className="border-b border-camp-sand-200 bg-white py-12">
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:grid-cols-3">
+          <div className="flex flex-col items-center gap-3 text-center">
+            <span className="grid h-14 w-14 place-items-center rounded-full bg-camp-forest-700/10 text-camp-forest-700">
+              <TruckIcon className="h-6 w-6" />
             </span>
-            <p className="text-sm font-medium text-camp-bark-800">משלוח לכל הארץ, 9-27 ימי עסקים</p>
+            <div>
+              <p className="font-bold text-camp-forest-900">9-27 ימי עסקים</p>
+              <p className="mt-1 text-sm text-camp-bark-800/70">זמן אספקה משוער, לפי מוצר</p>
+            </div>
           </div>
-          <div className="flex items-center gap-4 rounded-2xl border border-camp-sand-200 bg-white p-5 transition hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-camp-forest-700/10 text-camp-forest-700">
-              <ShieldIcon className="h-5 w-5" />
+          <div className="flex flex-col items-center gap-3 text-center">
+            <span className="grid h-14 w-14 place-items-center rounded-full bg-camp-forest-700/10 text-camp-forest-700">
+              <ShieldIcon className="h-6 w-6" />
             </span>
-            <p className="text-sm font-medium text-camp-bark-800">מחירים שקופים, ללא עמלות נסתרות</p>
+            <div>
+              <p className="font-bold text-camp-forest-900">מחירים שקופים</p>
+              <p className="mt-1 text-sm text-camp-bark-800/70">עלות המשלוח מוצגת מראש, ללא עמלות נסתרות</p>
+            </div>
           </div>
-          <div className="flex items-center gap-4 rounded-2xl border border-camp-sand-200 bg-white p-5 transition hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-camp-forest-700/10 text-camp-forest-700">
-              <LeafIcon className="h-5 w-5" />
+          <div className="flex flex-col items-center gap-3 text-center">
+            <span className="grid h-14 w-14 place-items-center rounded-full bg-camp-forest-700/10 text-camp-forest-700">
+              <LeafIcon className="h-6 w-6" />
             </span>
-            <p className="text-sm font-medium text-camp-bark-800">קטלוג אוצר ביד לחובבי טבע</p>
+            <div>
+              <p className="font-bold text-camp-forest-900">קטלוג אוצר ביד</p>
+              <p className="mt-1 text-sm text-camp-bark-800/70">כל מוצר נבחר ונבדק בעצמנו לפני שהוא עולה לאתר</p>
+            </div>
           </div>
         </div>
       </section>
@@ -77,6 +86,22 @@ export default async function Home() {
           {featured.map((product) => (
             <ProductCard key={product.slug} product={product} />
           ))}
+        </div>
+      </section>
+
+      <section className="bg-camp-sand-100/60 py-16">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 md:grid-cols-2">
+          <div>
+            <h2 className="text-2xl font-extrabold text-camp-forest-900 sm:text-3xl">הסיפור שלנו</h2>
+            <p className="mt-4 leading-relaxed text-camp-bark-800">
+              קמפאיזי היא חנות קטנה שמרכזת עבורכם ציוד קמפינג וטיולים - כל מוצר בקטלוג נבחר ונבדק על ידינו לפני
+              שהוא עולה לאתר, במקום להציף אתכם באלפי פריטים לא ברורים. המחיר שאתם רואים כולל את עלות המשלוח
+              האמיתית לישראל, בלי הפתעות בקופה.
+            </p>
+          </div>
+          <div className="grid aspect-video place-items-center rounded-3xl bg-camp-forest-900 text-camp-amber-500">
+            <TentIcon className="h-20 w-20" />
+          </div>
         </div>
       </section>
 

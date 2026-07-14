@@ -10,6 +10,7 @@ interface CheckoutResult {
   orderNumber: string;
   cjOrder: { ok: boolean; orderId?: string; orderStatus?: string; message: string };
   skippedSlugs: string[];
+  email: { ok: boolean; message: string };
 }
 
 export default function CheckoutPage() {
@@ -45,7 +46,7 @@ export default function CheckoutPage() {
         }),
       });
       const data = await res.json();
-      setResult({ orderNumber, cjOrder: data.cjOrder, skippedSlugs: data.skippedSlugs });
+      setResult({ orderNumber, cjOrder: data.cjOrder, skippedSlugs: data.skippedSlugs, email: data.email });
       clear();
     } catch {
       setError("שליחת ההזמנה נכשלה - נסו שוב או צרו קשר ישירות.");
@@ -89,6 +90,9 @@ export default function CheckoutPage() {
             <p className="mt-2 text-camp-bark-800/70">
               המוצרים הבאים לא מקושרים לספק בפועל וטרם דורשים הזמנה ידנית: {result.skippedSlugs.join(", ")}.
             </p>
+          )}
+          {!result.email.ok && (
+            <p className="mt-2 text-camp-bark-800/70">✉️ מייל אישור לא נשלח ({result.email.message}).</p>
           )}
         </div>
 
