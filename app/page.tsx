@@ -99,8 +99,14 @@ export default async function Home() {
               האמיתית לישראל, בלי הפתעות בקופה.
             </p>
           </div>
-          <div className="grid aspect-video place-items-center rounded-3xl bg-camp-forest-900 text-camp-amber-500">
-            <TentIcon className="h-20 w-20" />
+          <div className="relative aspect-video overflow-hidden rounded-3xl bg-camp-forest-900">
+            <Image
+              src="/story-gear.jpg"
+              alt="ציוד טיולים ארוז ומוכן לדרך"
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover"
+            />
           </div>
         </div>
       </section>
