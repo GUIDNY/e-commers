@@ -206,6 +206,14 @@ export function ShieldIcon(props: IconProps) {
   );
 }
 
+export function CheckIcon(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="m5 12 5 5 9-9" />
+    </Base>
+  );
+}
+
 export function TrashIcon(props: IconProps) {
   return (
     <Base {...props}>

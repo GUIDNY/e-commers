@@ -1,13 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { CatalogEntry } from "@/lib/catalog";
 import { formatIls } from "@/lib/pricing";
 import { ProductThumb } from "./ProductThumb";
 import { useCart } from "./CartContext";
+import { CartIcon, CheckIcon } from "./Icons";
 
 export function ProductCard({ product }: { product: CatalogEntry }) {
   const { addItem } = useCart();
+  const [added, setAdded] = useState(false);
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-camp-sand-200 bg-white transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(31,51,39,0.12)]">
@@ -32,12 +35,12 @@ export function ProductCard({ product }: { product: CatalogEntry }) {
             </p>
           </div>
           {product.shipsToIsrael === false ? (
-            <span className="shrink-0 rounded-full bg-camp-sand-100 px-4 py-2 text-sm font-semibold text-camp-bark-800/50">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-camp-sand-100 text-[10px] font-semibold leading-tight text-camp-bark-800/50">
               לא זמין
             </span>
           ) : (
             <button
-              onClick={() =>
+              onClick={() => {
                 addItem({
                   slug: product.slug,
                   nameHe: product.nameHe,
@@ -45,11 +48,14 @@ export function ProductCard({ product }: { product: CatalogEntry }) {
                   shippingIls: product.shippingIls,
                   icon: product.icon,
                   imageUrl: product.imageUrl,
-                })
-              }
-              className="shrink-0 rounded-full bg-camp-forest-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-camp-forest-600 active:scale-95"
+                });
+                setAdded(true);
+                setTimeout(() => setAdded(false), 1500);
+              }}
+              aria-label="הוסף לעגלה"
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-camp-forest-700 text-white transition hover:bg-camp-forest-600 active:scale-90"
             >
-              הוסף לעגלה
+              {added ? <CheckIcon className="h-5 w-5" /> : <CartIcon className="h-4 w-4" />}
             </button>
           )}
         </div>
