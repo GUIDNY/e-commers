@@ -1,11 +1,17 @@
 import { products as seedProducts } from "./products";
-import { getCjProduct, parseCjCost } from "./cj";
+import { getCjProduct, parseCjCost, parseCjGallery } from "./cj";
 import { sellPriceIls, shippingPriceIls, displayPricing } from "./pricing";
 import { Product } from "./types";
 
 export interface CatalogEntry extends Product {
   priceIls: number;
   shippingIls: number;
+  /** Every real photo CJ has on file for this pid (gallery), main photo first,
+   * deduped. Falls back to a single-item array with the curated imageUrl when
+   * there's no live CJ gallery. Powers the click-to-open lightbox on the
+   * product page - customers should be able to browse the same photos CJ shows
+   * on their own listing, not just the one hero shot. */
+  images: string[];
 }
 
 /**
@@ -18,6 +24,7 @@ export async function getCatalog(): Promise<CatalogEntry[]> {
   const entries = await Promise.all(
     seedProducts.map(async (product) => {
       let live = product;
+      let gallery: string[] = [];
       if (product.cjPid) {
         const cj = await getCjProduct(product.cjPid);
         if (cj?.sellPrice) {
@@ -35,8 +42,13 @@ export async function getCatalog(): Promise<CatalogEntry[]> {
             // URL (found live: it broke portable-water-filter-straw's image).
             imageUrl: cj.bigImage || product.imageUrl,
           };
+          gallery = parseCjGallery(cj.productImage);
         }
       }
+      // Main photo first, then the rest of CJ's gallery, deduped; falls back
+      // to just the single curated photo when there's no live CJ gallery.
+      const images = Array.from(new Set([live.imageUrl, ...gallery].filter((url): url is string => !!url)));
+
       // Products that can't ship to Israel aren't purchasable at all (see
       // ProductCard/ProductDetailActions), so they keep the raw cost-based
       // price with no shipping line rather than the flat-fee transform below.
@@ -49,6 +61,7 @@ export async function getCatalog(): Promise<CatalogEntry[]> {
         ...live,
         priceIls,
         shippingIls,
+        images,
       } satisfies CatalogEntry;
     })
   );

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getCatalog, getCatalogEntry, CatalogEntry } from "@/lib/catalog";
 import { TruckIcon, BoxIcon } from "@/components/Icons";
-import { ProductThumb } from "@/components/ProductThumb";
+import { ProductGallery } from "@/components/ProductGallery";
 import { ProductDetailActions } from "@/components/ProductDetailActions";
 import { ProductFaq } from "@/components/ProductFaq";
 import { CrossSellStrip } from "@/components/CrossSellStrip";
@@ -63,8 +63,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </nav>
 
       <div className="grid gap-10 md:grid-cols-2">
-        <div className="grid aspect-square place-items-center overflow-hidden rounded-3xl bg-camp-sand-100 text-camp-forest-700 shadow-[0_4px_20px_rgba(31,51,39,0.08)]">
-          <ProductThumb imageUrl={product.imageUrl} icon={product.icon} alt={product.nameHe} iconClassName="h-40 w-40" />
+        <div>
+          <ProductGallery images={product.images} icon={product.icon} alt={product.nameHe} />
         </div>
 
         <div>

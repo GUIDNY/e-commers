@@ -29,19 +29,62 @@ interface TokenCache {
 // cache (KV/Redis) if you deploy to a multi-instance serverless setup.
 let tokenCache: TokenCache | null = null;
 
+// getCatalog() fires many concurrent getCjProduct() calls (one per product).
+// Without this, every one of them would see tokenCache as empty/expired at
+// the same time and fire its own getAccessToken request in parallel - CJ's
+// auth endpoint replies 429 to that thundering herd, so most product lookups
+// silently fail (falling back to seed data) even though the credentials are
+// fine. Sharing the in-flight request means only one auth call ever goes out.
+let inFlightToken: Promise<string | null> | null = null;
+
+// getCatalog() fans out one CJ call per product (up to 11 concurrently). CJ's
+// API throttles per-key request rate and replies 429 to bursts, which without
+// this would silently fail most of those calls (fetchJson throws -> callers
+// catch and fall back to seed data). Serializing every outgoing CJ request
+// through this queue, with a small minimum gap between them, keeps us under
+// that limit; callers still just `await fetchJson(...)` as normal.
+let cjQueueTail: Promise<unknown> = Promise.resolve();
+const CJ_MIN_INTERVAL_MS = 350;
+
+function queueCjRequest<T>(run: () => Promise<T>): Promise<T> {
+  const result = cjQueueTail.then(run, run);
+  cjQueueTail = result.then(
+    () => new Promise((resolve) => setTimeout(resolve, CJ_MIN_INTERVAL_MS)),
+    () => new Promise((resolve) => setTimeout(resolve, CJ_MIN_INTERVAL_MS))
+  );
+  return result;
+}
+
+// CJ's API is flaky under any real load - even fully serialized one-at-a-time
+// requests (see queueCjRequest above) intermittently 429/time out. A couple of
+// retries with backoff clears up most of these transient failures; callers
+// still only ever see a clean result or a final null/throw either way.
+const CJ_MAX_ATTEMPTS = 3;
+const CJ_RETRY_DELAY_MS = 500;
+
 async function fetchJson<T>(url: string, init: RequestInit, timeoutMs = 10000): Promise<T> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const res = await fetch(url, { ...init, signal: controller.signal });
-    if (!res.ok) {
-      throw new Error(`CJ API HTTP ${res.status}`);
+  return queueCjRequest(async () => {
+    let lastErr: unknown;
+    for (let attempt = 1; attempt <= CJ_MAX_ATTEMPTS; attempt++) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const res = await fetch(url, { ...init, signal: controller.signal });
+        if (!res.ok) {
+          throw new Error(`CJ API HTTP ${res.status}`);
+        }
+        return (await res.json()) as T;
+      } catch (err) {
+        lastErr = err;
+        if (attempt < CJ_MAX_ATTEMPTS) {
+          await new Promise((resolve) => setTimeout(resolve, CJ_RETRY_DELAY_MS * attempt));
+        }
+      } finally {
+        clearTimeout(timer);
+      }
     }
-    const json = (await res.json()) as T;
-    return json;
-  } finally {
-    clearTimeout(timer);
-  }
+    throw lastErr;
+  });
 }
 
 interface CjAuthResponse {
@@ -60,28 +103,34 @@ async function getAccessToken(): Promise<string | null> {
   if (tokenCache && tokenCache.expiresAt > Date.now() + 60_000) {
     return tokenCache.accessToken;
   }
+  if (inFlightToken) return inFlightToken;
 
   const apiKey = resolveApiKey();
   if (!apiKey) return null;
 
-  try {
-    const json = await fetchJson<CjAuthResponse>(`${BASE_URL}/authentication/getAccessToken`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ apiKey }),
-    });
+  inFlightToken = (async () => {
+    try {
+      const json = await fetchJson<CjAuthResponse>(`${BASE_URL}/authentication/getAccessToken`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ apiKey }),
+      });
 
-    if (!json.result || !json.data) return null;
+      if (!json.result || !json.data) return null;
 
-    tokenCache = {
-      accessToken: json.data.accessToken,
-      expiresAt: new Date(json.data.accessTokenExpiryDate).getTime(),
-    };
-    return tokenCache.accessToken;
-  } catch {
-    // Network unreachable, invalid credentials, etc. Caller falls back to seed data.
-    return null;
-  }
+      tokenCache = {
+        accessToken: json.data.accessToken,
+        expiresAt: new Date(json.data.accessTokenExpiryDate).getTime(),
+      };
+      return tokenCache.accessToken;
+    } catch {
+      return null;
+    } finally {
+      inFlightToken = null;
+    }
+  })();
+
+  return inFlightToken;
 }
 
 export interface CjProduct {
@@ -156,6 +205,26 @@ export function parseCjCost(sellPrice: string): number {
   const first = sellPrice.split("-")[0]?.trim();
   const value = Number.parseFloat(first ?? "");
   return Number.isFinite(value) ? value : 0;
+}
+
+/**
+ * Parses the product/query detail endpoint's `productImage` field into a plain
+ * array of photo URLs. On that endpoint it's a JSON-array-encoded string (e.g.
+ * `["url1","url2",...]`) holding every gallery photo CJ has for the pid - not a
+ * single URL (see the CjProduct.bigImage doc comment above). Returns an empty
+ * array if the field is missing, empty, or not valid JSON.
+ */
+export function parseCjGallery(productImage: string | undefined): string[] {
+  if (!productImage) return [];
+  try {
+    const parsed = JSON.parse(productImage);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((url): url is string => typeof url === "string" && url.length > 0);
+    }
+    return [];
+  } catch {
+    return [];
+  }
 }
 
 export interface CjOrderShippingDetails {

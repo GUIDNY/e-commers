@@ -243,6 +243,30 @@ export function MenuIcon(props: IconProps) {
   );
 }
 
+export function CloseIcon(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="m6 6 12 12M18 6 6 18" />
+    </Base>
+  );
+}
+
+export function ChevronLeftIcon(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="m15 5-7 7 7 7" />
+    </Base>
+  );
+}
+
+export function ChevronRightIcon(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="m9 5 7 7-7 7" />
+    </Base>
+  );
+}
+
 export const CATEGORY_ICONS: Record<string, (props: IconProps) => React.ReactElement> = {
   shower: ShowerIcon,
   lantern: LanternIcon,
