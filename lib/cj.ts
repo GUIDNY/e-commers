@@ -88,6 +88,11 @@ export interface CjProduct {
   pid: string;
   productNameEn: string;
   productImage: string;
+  /** Only reliably present (and a single plain URL) on the product/query
+   * detail response - on that endpoint `productImage` is actually a
+   * JSON-array-encoded string of every gallery image, not a single URL, so
+   * callers wanting "the" product photo must use bigImage instead. */
+  bigImage?: string;
   sellPrice: string; // CJ's cost price, as a string like "12.50-15.30"
   categoryName?: string;
 }

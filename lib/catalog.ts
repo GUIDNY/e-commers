@@ -25,10 +25,15 @@ export async function getCatalog(): Promise<CatalogEntry[]> {
             ...product,
             costUsd: parseCjCost(cj.sellPrice),
             priceSource: "cj-live",
-            // Prefer our curated photo (hand-reviewed for clarity/no marketing
-            // banners) over CJ's own live image - only fall back to CJ's photo
-            // when we haven't picked one ourselves.
-            imageUrl: product.imageUrl || cj.productImage,
+            // Always show CJ's own current listing photo for matched products -
+            // the customer should see exactly what's on the supplier's dashboard
+            // for that pid, not a hand-picked alternate (even if CJ's is a
+            // busier marketing banner). Falls back to our curated photo only
+            // if CJ has none for this pid. Use bigImage, not productImage -
+            // on the product/query detail response productImage is a
+            // JSON-array-encoded string of every gallery photo, not a single
+            // URL (found live: it broke portable-water-filter-straw's image).
+            imageUrl: cj.bigImage || product.imageUrl,
           };
         }
       }
