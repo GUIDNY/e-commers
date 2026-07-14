@@ -91,3 +91,48 @@ export async function sendOrderConfirmationEmail(input: OrderConfirmationInput):
     return { ok: false, message: "Email send request failed (network/timeout)." };
   }
 }
+
+export interface ShippingUpdateInput {
+  to: string;
+  orderNumber: string;
+  trackingNumber: string;
+  carrierName: string;
+  message?: string;
+}
+
+export async function sendShippingUpdateEmail(input: ShippingUpdateInput): Promise<EmailOutcome> {
+  const client = resolveClient();
+  const from = process.env.EMAIL_FROM;
+  if (!client || !from) {
+    return { ok: false, message: "Email not configured (missing RESEND_API_KEY or EMAIL_FROM)." };
+  }
+
+  const ownerEmail = process.env.STORE_OWNER_EMAIL;
+  const html = `
+    <div dir="rtl" style="font-family:Arial,sans-serif;color:#24201a;max-width:480px;margin:0 auto">
+      <h2 style="color:#1f3327">ההזמנה שלך בדרך! 📦</h2>
+      <p>מספר הזמנה: <strong>${input.orderNumber}</strong></p>
+      <p>חברת שילוח: <strong>${input.carrierName}</strong></p>
+      <p>מספר מעקב: <strong style="font-family:monospace">${input.trackingNumber}</strong></p>
+      ${input.message ? `<p style="margin-top:16px;white-space:pre-line">${input.message}</p>` : ""}
+      <p style="margin-top:16px">תודה שקנית!</p>
+    </div>
+  `;
+
+  try {
+    const { error } = await client.emails.send({
+      from,
+      to: input.to,
+      replyTo: ownerEmail,
+      bcc: ownerEmail,
+      subject: `עדכון משלוח - הזמנה ${input.orderNumber}`,
+      html,
+    });
+    if (error) {
+      return { ok: false, message: error.message };
+    }
+    return { ok: true, message: "Shipping update email sent." };
+  } catch {
+    return { ok: false, message: "Email send request failed (network/timeout)." };
+  }
+}
