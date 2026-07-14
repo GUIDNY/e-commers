@@ -4,14 +4,17 @@
 export const MARKUP_RATE = 0.3;
 
 /**
+ * Minimum flat profit (in ILS) per unit, regardless of the percentage markup
+ * above - a 30% margin on a $1.53 item is a few agorot, not worth selling.
+ * The actual markup applied is whichever of the two is larger.
+ */
+export const MIN_MARKUP_ILS = 35;
+
+/**
  * Approximate USD -> ILS conversion used for display. CJ prices arrive in USD;
  * update this if you want the storefront pegged to a live exchange-rate feed.
  */
 export const USD_TO_ILS = 3.7;
-
-export function applyMarkup(costUsd: number): number {
-  return costUsd * (1 + MARKUP_RATE);
-}
 
 export function usdToIls(usd: number): number {
   return usd * USD_TO_ILS;
@@ -25,9 +28,12 @@ export function formatIls(amount: number): string {
   }).format(amount);
 }
 
-/** Sell price in ILS, cost + markup converted from USD and rounded to a whole shekel. */
+/** Sell price in ILS: supplier cost plus whichever markup is larger -
+ * 30% of cost, or a flat MIN_MARKUP_ILS floor - rounded to a whole shekel. */
 export function sellPriceIls(costUsd: number): number {
-  return Math.round(usdToIls(applyMarkup(costUsd)));
+  const costIls = usdToIls(costUsd);
+  const profitIls = Math.max(costIls * MARKUP_RATE, MIN_MARKUP_ILS);
+  return Math.round(costIls + profitIls);
 }
 
 /** Real shipping cost in ILS (from CJ's live freight quote), converted from USD. */
