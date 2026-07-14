@@ -67,7 +67,7 @@ export async function sendOrderConfirmationEmail(input: OrderConfirmationInput):
       <table style="width:100%;border-collapse:collapse;margin:16px 0">
         ${itemsHtml}
         <tr><td style="padding-top:8px;border-top:1px solid #e8dcc0">סכום ביניים</td><td style="padding-top:8px;border-top:1px solid #e8dcc0;text-align:left">${formatIls(input.subtotalIls)}</td></tr>
-        <tr><td>משלוח לישראל</td><td style="text-align:left">${formatIls(input.shippingIls)}</td></tr>
+        <tr><td>משלוח</td><td style="text-align:left">${formatIls(input.shippingIls)}</td></tr>
         <tr><td style="font-weight:bold;padding-top:8px">סה"כ</td><td style="font-weight:bold;padding-top:8px;text-align:left">${formatIls(input.totalIls)}</td></tr>
       </table>
       <p>ניצור איתך קשר בהקדם לאישור סופי ותשלום מאובטח. תודה שקנית!</p>

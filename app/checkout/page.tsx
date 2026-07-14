@@ -173,7 +173,7 @@ export default function CheckoutPage() {
               <span>{formatIls(subtotalIls)}</span>
             </div>
             <div className="flex justify-between">
-              <span>משלוח לישראל</span>
+              <span>משלוח</span>
               <span>{formatIls(shippingIls)}</span>
             </div>
           </div>

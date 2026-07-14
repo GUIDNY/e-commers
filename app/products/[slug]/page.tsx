@@ -77,7 +77,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <div className="mt-6 flex items-center gap-2 rounded-xl bg-camp-sand-100 p-3 text-sm text-camp-bark-800">
               <TruckIcon className="h-5 w-5 shrink-0 text-camp-forest-700" />
               <span>
-                משלוח לישראל: זמן אספקה משוער {product.etaDays[0]}-{product.etaDays[1]} ימי עסקים.
+                זמן אספקה משוער: {product.etaDays[0]}-{product.etaDays[1]} ימי עסקים.
               </span>
             </div>
           )}

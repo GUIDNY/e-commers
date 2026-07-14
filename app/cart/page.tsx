@@ -81,7 +81,7 @@ export default function CartPage() {
           <span>{formatIls(subtotalIls)}</span>
         </div>
         <div className="flex justify-between text-sm text-camp-bark-800">
-          <span>משלוח לישראל</span>
+          <span>משלוח</span>
           <span>{formatIls(shippingIls)}</span>
         </div>
         <div className="flex justify-between border-t border-camp-sand-200 pt-2 text-lg font-extrabold text-camp-forest-900">

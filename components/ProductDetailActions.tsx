@@ -15,7 +15,7 @@ export function ProductDetailActions({ product }: { product: CatalogEntry }) {
       <div className="mt-6 flex flex-col gap-4">
         <span className="text-3xl font-extrabold text-camp-forest-900">{formatIls(product.priceIls)}</span>
         <div className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          מוצר זה כרגע לא ניתן למשלוח לישראל מהספק - לא זמין להזמנה.
+          מוצר זה כרגע לא זמין למשלוח מהספק - לא זמין להזמנה.
         </div>
       </div>
     );
@@ -25,7 +25,7 @@ export function ProductDetailActions({ product }: { product: CatalogEntry }) {
     <div className="mt-6 flex flex-col gap-4">
       <div className="flex items-baseline gap-3">
         <span className="text-3xl font-extrabold text-camp-forest-900">{formatIls(product.priceIls)}</span>
-        <span className="text-sm text-camp-bark-800/60">+ {formatIls(product.shippingIls)} משלוח לישראל</span>
+        <span className="text-sm text-camp-bark-800/60">+ {formatIls(product.shippingIls)} משלוח</span>
       </div>
 
       <div className="flex items-center gap-3">

@@ -1,6 +1,6 @@
 import { products as seedProducts } from "./products";
 import { getCjProduct, parseCjCost } from "./cj";
-import { sellPriceIls, shippingPriceIls } from "./pricing";
+import { sellPriceIls, shippingPriceIls, displayPricing } from "./pricing";
 import { Product } from "./types";
 
 export interface CatalogEntry extends Product {
@@ -32,10 +32,18 @@ export async function getCatalog(): Promise<CatalogEntry[]> {
           };
         }
       }
+      // Products that can't ship to Israel aren't purchasable at all (see
+      // ProductCard/ProductDetailActions), so they keep the raw cost-based
+      // price with no shipping line rather than the flat-fee transform below.
+      const { priceIls, shippingIls } =
+        live.shipsToIsrael === false
+          ? { priceIls: sellPriceIls(live.costUsd), shippingIls: 0 }
+          : displayPricing(live.costUsd, live.shippingUsd);
+
       return {
         ...live,
-        priceIls: sellPriceIls(live.costUsd),
-        shippingIls: shippingPriceIls(live.shippingUsd),
+        priceIls,
+        shippingIls,
       } satisfies CatalogEntry;
     })
   );

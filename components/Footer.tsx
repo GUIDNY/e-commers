@@ -10,7 +10,7 @@ export function Footer() {
           <div>
             <p className="font-semibold">משלוח עד הבית בישראל</p>
             <p className="mt-1 text-sm text-camp-sand-200/80">
-              משלוח בינלאומי לכל הארץ, זמן אספקה משוער 12-26 ימי עסקים לפי מוצר.
+              משלוח לכל הארץ, זמן אספקה משוער 9-27 ימי עסקים לפי מוצר.
             </p>
           </div>
         </div>
@@ -31,10 +31,13 @@ export function Footer() {
       </div>
       <div className="border-t border-white/10 px-4 py-5 text-center text-xs text-camp-sand-200/70">
         <p>
-          © {new Date().getFullYear()} קמפ<span className="text-camp-amber-500">איזי</span> · חנות דמו לניהול קטלוג
-          קמפינג ·{" "}
+          © {new Date().getFullYear()} קמפ<span className="text-camp-amber-500">איזי</span> ·{" "}
           <Link href="/products" className="underline hover:text-white">
             כל המוצרים
+          </Link>{" "}
+          ·{" "}
+          <Link href="/terms" className="underline hover:text-white">
+            תקנון ומדיניות משלוחים
           </Link>
         </p>
       </div>

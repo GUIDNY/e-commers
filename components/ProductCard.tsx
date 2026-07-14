@@ -28,7 +28,7 @@ export function ProductCard({ product }: { product: CatalogEntry }) {
           <div>
             <p className="text-lg font-extrabold text-camp-forest-900">{formatIls(product.priceIls)}</p>
             <p className="text-xs text-camp-bark-800/60">
-              {product.shipsToIsrael === false ? "לא ניתן למשלוח לישראל" : `+ ${formatIls(product.shippingIls)} משלוח לישראל`}
+              {product.shipsToIsrael === false ? "לא זמין למשלוח" : `+ ${formatIls(product.shippingIls)} משלוח`}
             </p>
           </div>
           {product.shipsToIsrael === false ? (

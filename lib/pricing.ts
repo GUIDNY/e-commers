@@ -30,7 +30,36 @@ export function sellPriceIls(costUsd: number): number {
   return Math.round(usdToIls(applyMarkup(costUsd)));
 }
 
-/** Shipping price in ILS, converted from USD and rounded to a whole shekel. */
+/** Real shipping cost in ILS (from CJ's live freight quote), converted from USD. */
 export function shippingPriceIls(shippingUsd: number): number {
   return Math.round(usdToIls(shippingUsd));
+}
+
+/**
+ * Flat shipping fee shown to the customer, regardless of the real per-product
+ * cost above - matches how Israeli retailers usually present shipping (a
+ * small fixed fee), rather than the highly-variable real supplier freight
+ * cost, which can look alarming next to a cheap item's price. The gap
+ * between the real cost and this flat fee is absorbed into the displayed
+ * item price (see `displayPricing`) so the total the customer pays is
+ * unchanged - only the price/shipping split is normalized.
+ */
+export const DISPLAY_SHIPPING_ILS = 20;
+
+export interface DisplayPricing {
+  /** Item price shown to the customer - absorbs the gap between real
+   * shipping cost and the flat DISPLAY_SHIPPING_ILS fee. */
+  priceIls: number;
+  /** Always DISPLAY_SHIPPING_ILS - what the customer sees as "shipping". */
+  shippingIls: number;
+}
+
+/** Combines cost+markup and real shipping into a (price, flat-shipping) pair
+ * whose sum always equals the true total (sellPriceIls + real shippingIls). */
+export function displayPricing(costUsd: number, shippingUsd: number): DisplayPricing {
+  const trueTotal = sellPriceIls(costUsd) + shippingPriceIls(shippingUsd);
+  return {
+    priceIls: Math.max(0, Math.round(trueTotal - DISPLAY_SHIPPING_ILS)),
+    shippingIls: DISPLAY_SHIPPING_ILS,
+  };
 }
