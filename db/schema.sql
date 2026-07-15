@@ -20,3 +20,11 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 CREATE INDEX IF NOT EXISTS orders_created_at_idx ON orders (created_at DESC);
+
+-- PayPlus payment tracking: an order is created as 'pending' before the
+-- customer pays, then flipped to 'paid'/'failed' by the webhook once PayPlus
+-- confirms the transaction. The CJ order + confirmation email only fire once
+-- payment_status reaches 'paid' (see app/api/payplus/webhook/route.ts).
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_status TEXT NOT NULL DEFAULT 'pending';
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS payplus_transaction_uid TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS payplus_payment_url TEXT;

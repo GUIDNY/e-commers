@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import { getProductBySlug } from "@/lib/products";
 import { getCatalog } from "@/lib/catalog";
-import { createCjOrder, CjOrderShippingDetails } from "@/lib/cj";
-import { sendOrderConfirmationEmail } from "@/lib/email";
+import { CjOrderShippingDetails } from "@/lib/cj";
 import { saveOrder } from "@/lib/orders";
+import { generatePaymentLink } from "@/lib/payplus";
 
 interface CheckoutRequestBody {
   orderNumber: string;
@@ -11,23 +10,20 @@ interface CheckoutRequestBody {
   items: { slug: string; qty: number }[];
 }
 
+function siteUrl(): string {
+  return process.env.NEXT_PUBLIC_SITE_URL || "https://e-commerss-alpha.vercel.app";
+}
+
+/**
+ * Only saves the order (as 'pending') and hands back a PayPlus payment link -
+ * it does NOT create the CJ supplier order or send the confirmation email.
+ * Those only happen once PayPlus confirms the charge actually went through
+ * (see app/api/payplus/webhook/route.ts), so we never draft a supplier order
+ * or email a customer for a payment that never completed.
+ */
 export async function POST(request: Request) {
   const body = (await request.json()) as CheckoutRequestBody;
   const { orderNumber, shipping, items } = body;
-
-  const cjLineItems: { vid: string; quantity: number }[] = [];
-  const skippedSlugs: string[] = [];
-
-  for (const item of items) {
-    const product = getProductBySlug(item.slug);
-    if (product?.cjVid && product.shipsToIsrael !== false) {
-      cjLineItems.push({ vid: product.cjVid, quantity: item.qty });
-    } else {
-      skippedSlugs.push(item.slug);
-    }
-  }
-
-  const cjOrder = await createCjOrder(orderNumber, shipping, cjLineItems);
 
   const catalog = await getCatalog();
   const orderItems = items.flatMap((item) => {
@@ -40,6 +36,28 @@ export async function POST(request: Request) {
     return sum + (entry?.shippingIls ?? 0);
   }, 0);
   const totalIls = subtotalIls + shippingIls;
+
+  const payment = await generatePaymentLink({
+    orderNumber,
+    amountIls: totalIls,
+    customerName: shipping.fullName,
+    customerEmail: shipping.email,
+    customerPhone: shipping.phone,
+    // PayPlus requires amount to exactly equal the sum of all items - the
+    // flat display shipping fee (lib/pricing.ts) needs its own line item,
+    // it's not folded into any product's price.
+    items: [
+      ...orderItems.map((i) => ({ name: i.nameHe, price: i.priceIls, quantity: i.qty })),
+      ...(shippingIls > 0 ? [{ name: "משלוח", price: shippingIls, quantity: 1 }] : []),
+    ],
+    successUrl: `${siteUrl()}/checkout/success?order=${encodeURIComponent(orderNumber)}`,
+    failureUrl: `${siteUrl()}/checkout/failure?order=${encodeURIComponent(orderNumber)}`,
+    callbackUrl: `${siteUrl()}/api/payplus/webhook`,
+  });
+
+  if (!payment.ok) {
+    return NextResponse.json({ payment }, { status: 502 });
+  }
 
   try {
     await saveOrder({
@@ -54,25 +72,14 @@ export async function POST(request: Request) {
       subtotalIls,
       shippingIls,
       totalIls,
-      cjOrderId: cjOrder.orderId,
+      payplusPaymentUrl: payment.paymentUrl,
     });
   } catch (err) {
-    // Order storage failing shouldn't block checkout - the CJ order and
-    // customer email (below) already went out; log for visibility.
-    console.error("Failed to save order to database:", err);
+    // If we can't record the order, don't send the customer to pay for
+    // something we won't be able to track - fail the checkout instead.
+    console.error("Failed to save pending order to database:", err);
+    return NextResponse.json({ payment: { ok: false, message: "Failed to save order." } }, { status: 500 });
   }
 
-  let email: { ok: boolean; message: string } = { ok: false, message: "No customer email provided." };
-  if (shipping.email) {
-    email = await sendOrderConfirmationEmail({
-      to: shipping.email,
-      orderNumber,
-      items: orderItems,
-      subtotalIls,
-      shippingIls,
-      totalIls,
-    });
-  }
-
-  return NextResponse.json({ cjOrder, skippedSlugs, email });
+  return NextResponse.json({ payment });
 }

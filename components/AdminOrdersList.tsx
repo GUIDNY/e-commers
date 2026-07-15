@@ -60,6 +60,15 @@ function OrderCard({ order }: { order: OrderRecord }) {
         <div className="text-left">
           <p className="text-lg font-extrabold text-camp-forest-900">{formatIls(order.totalIls)}</p>
           <p className="text-xs text-camp-bark-800/50">{new Date(order.createdAt).toLocaleString("he-IL")}</p>
+          {order.paymentStatus === "failed" ? (
+            <span className="mt-1 inline-block rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+              תשלום נכשל
+            </span>
+          ) : (
+            <span className="mt-1 inline-block rounded-full bg-camp-forest-700/10 px-3 py-1 text-xs font-semibold text-camp-forest-700">
+              שולם ✓
+            </span>
+          )}
           {order.shipped ? (
             <span className="mt-1 inline-block rounded-full bg-camp-forest-700/10 px-3 py-1 text-xs font-semibold text-camp-forest-700">
               נשלח ✓

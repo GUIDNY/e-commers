@@ -4,18 +4,9 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartContext";
 import { formatIls } from "@/lib/pricing";
-import { ShieldIcon } from "@/components/Icons";
-
-interface CheckoutResult {
-  orderNumber: string;
-  cjOrder: { ok: boolean; orderId?: string; orderStatus?: string; message: string };
-  skippedSlugs: string[];
-  email: { ok: boolean; message: string };
-}
 
 export default function CheckoutPage() {
-  const { items, subtotalIls, shippingIls, totalIls, clear } = useCart();
-  const [result, setResult] = useState<CheckoutResult | null>(null);
+  const { items, subtotalIls, shippingIls, totalIls } = useCart();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,64 +37,18 @@ export default function CheckoutPage() {
         }),
       });
       const data = await res.json();
-      setResult({ orderNumber, cjOrder: data.cjOrder, skippedSlugs: data.skippedSlugs, email: data.email });
-      clear();
+      if (!res.ok || !data.payment?.ok) {
+        setError(data.payment?.message || "יצירת קישור התשלום נכשלה - נסו שוב או צרו קשר ישירות.");
+        setSubmitting(false);
+        return;
+      }
+      // Cart is cleared on the success page once payment is actually
+      // confirmed - not here, so an abandoned payment doesn't lose the cart.
+      window.location.href = data.payment.paymentUrl;
     } catch {
       setError("שליחת ההזמנה נכשלה - נסו שוב או צרו קשר ישירות.");
-    } finally {
       setSubmitting(false);
     }
-  }
-
-  if (result) {
-    return (
-      <div className="mx-auto max-w-xl px-4 py-20 text-center">
-        <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-camp-forest-700/10 text-camp-forest-700">
-          <ShieldIcon className="h-7 w-7" />
-        </div>
-        <h1 className="text-2xl font-extrabold text-camp-forest-900">בקשת ההזמנה התקבלה! 🎉</h1>
-        <p className="mt-3 text-camp-bark-800/80">
-          מספר הזמנה: <span className="font-mono font-semibold">{result.orderNumber}</span>
-        </p>
-        <p className="mt-2 text-camp-bark-800/70">
-          ניצור איתך קשר בהקדם לאישור סופי ותשלום מאובטח. תודה שקנית ב-קמפאיזי!
-        </p>
-
-        <div className="mt-6 rounded-xl border border-camp-sand-200 bg-camp-sand-50 p-4 text-right text-sm">
-          {result.cjOrder.ok ? (
-            <p className="text-camp-forest-900">
-              ✅ נפתחה הזמנה מתאימה אצל הספק (CJdropshipping)
-              {result.cjOrder.orderId && (
-                <>
-                  {" "}
-                  - מספר הזמנה: <span className="font-mono">{result.cjOrder.orderId}</span>
-                </>
-              )}
-              . ההזמנה ממתינה לאישור/תשלום ידני שלך בדשבורד של CJ לפני שהיא נשלחת בפועל.
-            </p>
-          ) : (
-            <p className="text-camp-bark-800/70">
-              ⚠️ לא נפתחה הזמנה אוטומטית אצל הספק ({result.cjOrder.message}) - יש להזמין את הפריטים ידנית.
-            </p>
-          )}
-          {result.skippedSlugs.length > 0 && (
-            <p className="mt-2 text-camp-bark-800/70">
-              המוצרים הבאים לא מקושרים לספק בפועל וטרם דורשים הזמנה ידנית: {result.skippedSlugs.join(", ")}.
-            </p>
-          )}
-          {!result.email.ok && (
-            <p className="mt-2 text-camp-bark-800/70">✉️ מייל אישור לא נשלח ({result.email.message}).</p>
-          )}
-        </div>
-
-        <Link
-          href="/products"
-          className="mt-8 inline-block rounded-full bg-camp-forest-700 px-6 py-3 text-sm font-bold text-white hover:bg-camp-forest-600"
-        >
-          המשך בקנייה
-        </Link>
-      </div>
-    );
   }
 
   if (items.length === 0) {
@@ -123,9 +68,7 @@ export default function CheckoutPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
       <h1 className="mb-2 text-2xl font-extrabold text-camp-forest-900">פרטי משלוח</h1>
-      <p className="mb-6 text-sm text-camp-bark-800/60">
-        זהו שלב הזמנה לדוגמה - ללא סליקת תשלום מחוברת. לאחר השליחה ניצור קשר להשלמת התשלום.
-      </p>
+      <p className="mb-6 text-sm text-camp-bark-800/60">לאחר מילוי הפרטים תועברו לעמוד תשלום מאובטח.</p>
 
       <div className="grid gap-8 md:grid-cols-[1.3fr_1fr]">
         <form
@@ -151,7 +94,7 @@ export default function CheckoutPage() {
             disabled={submitting}
             className="w-full rounded-full bg-camp-amber-600 px-6 py-3 text-sm font-bold text-white shadow-md shadow-camp-amber-600/20 transition hover:bg-camp-amber-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {submitting ? "שולח..." : "שליחת בקשת הזמנה"}
+            {submitting ? "מעביר לתשלום..." : "מעבר לתשלום מאובטח"}
           </button>
         </form>
 

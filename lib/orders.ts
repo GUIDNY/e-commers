@@ -8,6 +8,8 @@ export interface OrderItemRecord {
   priceIls: number;
 }
 
+export type PaymentStatus = "pending" | "paid" | "failed";
+
 export interface NewOrderInput {
   orderNumber: string;
   customerName: string;
@@ -21,10 +23,13 @@ export interface NewOrderInput {
   shippingIls: number;
   totalIls: number;
   cjOrderId?: string;
+  payplusPaymentUrl?: string;
 }
 
 export interface OrderRecord extends NewOrderInput {
   id: number;
+  paymentStatus: PaymentStatus;
+  payplusTransactionUid: string | null;
   shipped: boolean;
   trackingNumber: string | null;
   carrierName: string | null;
@@ -48,6 +53,9 @@ function rowToOrder(row: any): OrderRecord {
     shippingIls: row.shipping_ils,
     totalIls: row.total_ils,
     cjOrderId: row.cj_order_id ?? undefined,
+    payplusPaymentUrl: row.payplus_payment_url ?? undefined,
+    paymentStatus: row.payment_status,
+    payplusTransactionUid: row.payplus_transaction_uid,
     shipped: row.shipped,
     trackingNumber: row.tracking_number,
     carrierName: row.carrier_name,
@@ -63,18 +71,56 @@ export async function saveOrder(input: NewOrderInput): Promise<void> {
     INSERT INTO orders (
       order_number, customer_name, customer_email, customer_phone,
       customer_city, customer_address, customer_zip, items,
-      subtotal_ils, shipping_ils, total_ils, cj_order_id
+      subtotal_ils, shipping_ils, total_ils, cj_order_id, payplus_payment_url
     ) VALUES (
       ${input.orderNumber}, ${input.customerName}, ${input.customerEmail}, ${input.customerPhone},
       ${input.customerCity}, ${input.customerAddress}, ${input.customerZip ?? null}, ${JSON.stringify(input.items)},
-      ${input.subtotalIls}, ${input.shippingIls}, ${input.totalIls}, ${input.cjOrderId ?? null}
+      ${input.subtotalIls}, ${input.shippingIls}, ${input.totalIls}, ${input.cjOrderId ?? null},
+      ${input.payplusPaymentUrl ?? null}
     )
   `;
 }
 
-export async function listOrders(): Promise<OrderRecord[]> {
+/**
+ * Marks an order paid and records the CJ order id created right after
+ * (checkout only creates the CJ draft order once payment is confirmed - see
+ * app/api/payplus/webhook/route.ts). Only transitions orders still 'pending'
+ * so a retried webhook call can't double-process the same order.
+ */
+export async function markOrderPaid(
+  orderNumber: string,
+  transactionUid: string,
+  cjOrderId?: string
+): Promise<boolean> {
   const sql = getSql();
-  const rows = await sql`SELECT * FROM orders ORDER BY created_at DESC`;
+  const rows = await sql`
+    UPDATE orders
+    SET payment_status = 'paid', payplus_transaction_uid = ${transactionUid}, cj_order_id = ${cjOrderId ?? null}
+    WHERE order_number = ${orderNumber} AND payment_status = 'pending'
+    RETURNING id
+  `;
+  return rows.length > 0;
+}
+
+export async function markOrderPaymentFailed(orderNumber: string, transactionUid: string): Promise<void> {
+  const sql = getSql();
+  await sql`
+    UPDATE orders
+    SET payment_status = 'failed', payplus_transaction_uid = ${transactionUid}
+    WHERE order_number = ${orderNumber} AND payment_status = 'pending'
+  `;
+}
+
+/**
+ * Excludes still-pending (unpaid, likely abandoned) checkouts by default -
+ * the admin panel is for managing real orders, not incomplete payment
+ * attempts. Pass includePending: true to see those too.
+ */
+export async function listOrders(options?: { includePending?: boolean }): Promise<OrderRecord[]> {
+  const sql = getSql();
+  const rows = options?.includePending
+    ? await sql`SELECT * FROM orders ORDER BY created_at DESC`
+    : await sql`SELECT * FROM orders WHERE payment_status != 'pending' ORDER BY created_at DESC`;
   return rows.map(rowToOrder);
 }
 
